@@ -28,6 +28,7 @@ module "vpc" {
     Workspace = terraform.workspace
     Test1     = "${var.vpc_name}-vpc"
     Test2     = var.aws_region
+    # Test3     = var.backend_s3
   }
 }
 ################################################################################
