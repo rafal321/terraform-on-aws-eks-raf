@@ -9,78 +9,51 @@ https://aws.amazon.com/blogs/infrastructure-and-automation/disaster-recovery-dep
 How we structure our Terraform project
 https://blog.softup.co/how-we-structure-our-terraform-code/
 
-infrastructure
-├── modules
-│   ├── containers
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   ├── templates
-│   │   │   └── app.json.tpl
-│   │   ├── variables.tf
-│   │   └── versions.tf
-│   ├── database
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   │   └── versions.tf
-│   ├── management
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   └── variables.tf
-│   │   └── versions.tf
-│   ├── network
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   ├── variables.tf
-│   │   └── versions.tf
-│   ├── notifications
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   ├── templates
-│   │   │   └── email-sns-stack.json.tpl
-│   │   └── variables.tf
-│   │   └── versions.tf
-│   ├── scaling
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   ├── variables.tf
-│   ├── security
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   │   ├── templates
-│   │   │   ├── ecs-ec2-role-policy.json.tpl
-│   │   │   ├── ecs-ec2-role.json.tpl
-│   │   │   └── ecs-service-role.json.tpl
-│   │   ├── variables.tf
-│   │   └── versions.tf
-│   └── storage
-│       ├── main.tf
-│       ├── outputs.tf
-│   	├── variables.tf
-│   	└── versions.tf
-├── development
-│   ├── main.tf
-│   ├── outputs.tf
-│   ├── provider.tf
-│   ├── variables.tf
-│   └── versions.tf
-├── staging
-│   ├── main.tf
-│   ├── outputs.tf
-│   ├── provider.tf
-│   ├── variables.tf
-│   └── versions.tf
-└── production
-    ├── main.tf
-    ├── outputs.tf
-    ├── provider.tf
-    ├── variables.tf
-    └── versions.tf
-
 
 [1] Each Terraform module should live in its own repository and versioning should be leveraged.
 [2] Minimal structure: main.tf, variables.tf, outputs.tf.
 [3] Use input and output variables (outputs can be accessed with module.module_name.output_name).
 ==================================================
+==================================================
+# DYNAMO DB
 
+aws dynamodb list-tables
+----
+aws dynamodb describe-table --table-name terraform-raf-vpc
+----
+aws dynamodb describe-table --table-name $table_name | jq '.Table | del(.TableId, .TableArn, .ItemCount, .TableSizeBytes, .CreationDateTime, .TableStatus, .LatestStreamArn, .LatestStreamLabel, .ProvisionedThroughput.NumberOfDecreasesToday, .ProvisionedThroughput.LastIncreaseDateTime)' > schema.json
+Parameter validation failed:
+Unknown parameter in input: "TableClassSummary", must be one of: AttributeDefinitions, TableName, KeySchema, LocalSecondaryIndexes, GlobalSecondaryIndexes, BillingMode, ProvisionedThroughput, StreamSpecification, SSESpecification, Tags, TableClass, DeletionProtectionEnabled
+Unknown parameter in ProvisionedThroughput: "LastDecreaseDateTime", must be one of: ReadCapacityUnits, WriteCapacityUnits
+----
+export table_name=terraform-raf-vpc
+----
+aws dynamodb delete-table --table-name $table_name
+----
+cat schema.json
+{
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "LockID",
+      "AttributeType": "S"
+    }
+  ],
+  "TableName": "terraform-raf-vpc",
+  "KeySchema": [
+    {
+      "AttributeName": "LockID",
+      "KeyType": "HASH"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  },
+  "DeletionProtectionEnabled": false
+}
+
+----
+aws dynamodb create-table --cli-input-json file://schema.json
+
+===================================================
 
