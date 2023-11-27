@@ -1,0 +1,4 @@
+terraform plan -target=module.vpc | grep 'will be created'
+terraform plan -target=aws_eks_cluster.eks_cluster | grep 'will be created'
+terraform plan -target=aws_eks_node_group.eks_ng_public | grep 'will be created'
+terraform plan -target=aws_eks_node_group.eks_ng_private | grep 'will be created'
