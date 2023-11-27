@@ -13,10 +13,8 @@ https://blog.softup.co/how-we-structure-our-terraform-code/
 [1] Each Terraform module should live in its own repository and versioning should be leveraged.
 [2] Minimal structure: main.tf, variables.tf, outputs.tf.
 [3] Use input and output variables (outputs can be accessed with module.module_name.output_name).
-==================================================
-==================================================
-# DYNAMO DB
-
+----
+```sh
 aws dynamodb list-tables
 ----
 aws dynamodb describe-table --table-name terraform-raf-vpc
@@ -54,6 +52,5 @@ cat schema.json
 
 ----
 aws dynamodb create-table --cli-input-json file://schema.json
-
-===================================================
+```
 
