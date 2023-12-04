@@ -25,6 +25,8 @@ module "bastion" {
   bastion_iam_role      = null
   bastion_tag_name      = "Bastion"
   bastion_vol_size      = 12
+  bastion_vpc_vpc_id    = module.vpc.vpc_vpc_id
+  bastion_cidr_blocks  = ["1.2.3.4/32"]
 }
 output "bastion_out" { value = module.bastion }
 
