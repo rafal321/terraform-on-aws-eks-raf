@@ -14,6 +14,7 @@ module "vpc" {
   # aws_profile = "raf"
 }
 output "vpc_out" { value = module.vpc }
+# Example module.vpc.vpc_aws_region
 
 # == BASTION ========================
 module "bastion" {
