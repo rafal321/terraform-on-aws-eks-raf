@@ -9,7 +9,7 @@ variable "bastion_vpc_vpc_id" {type = string}
 variable "bastion_cidr_blocks" {type = list} 
 #======================================
 # --- latest AMI ---
-data "aws_ami" "amazon-linux-2" { # RAF : this one is newer!!!
+data "aws_ami" "amazon-linux-2" {
   most_recent = true
   owners      = ["amazon"]
   filter {
@@ -42,7 +42,7 @@ resource "aws_instance" "aws_instance" {
     tags = {
       Name       = "${var.bastion_tag_name}-root"
       managed_by = "terraform"
-    }
+      }
   }
 }
 #================================================
@@ -76,4 +76,7 @@ output "bastion_instance_id" {
 }
 output "bastion_ssh_security_group__ids" {
   value = aws_instance.aws_instance.vpc_security_group_ids
+}
+output "zz1" {
+  value = aws_instance.aws_instance.subnet_id
 }

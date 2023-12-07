@@ -14,6 +14,24 @@ variable "aws_region" {
   type        = string
   default     = "eu-west-1"
 }
+variable "aws_profile" {
+  description = "var.profile"
+  type        = string
+  default     = "default"
+}
+
+variable "enable_nat_gateway" {
+  description = "var.enable_nat_gateway"
+  type        = string
+  default     = "false"
+}
+
+variable "single_nat_gateway" {
+  description = "var.single_nat_gateway"
+  type        = string
+  default     = "true"
+}
+
 # variable "aws_profile" {
 #   description = "var.aws_profile"
 #   type        = string
