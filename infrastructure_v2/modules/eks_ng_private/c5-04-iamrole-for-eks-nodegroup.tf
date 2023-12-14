@@ -1,5 +1,5 @@
 resource "aws_iam_role" "eks_nodegroup_role" {
-  name = "${var.eks_ng_public_name}-eks-public-nodegroup-role"
+  name = "${var.eks_ng_private_name}-eks-private-nodegroup-role"
   assume_role_policy = jsonencode({
     Statement = [{
       Action = "sts:AssumeRole"

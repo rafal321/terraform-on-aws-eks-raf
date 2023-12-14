@@ -1,12 +1,12 @@
-# Create AWS EKS Node Group - public
-resource "aws_eks_node_group" "eks_ng_public" {
+# Create AWS EKS Node Group - private
+resource "aws_eks_node_group" "eks_ng_private" {
   cluster_name = var.eks_cluster_id
   lifecycle { create_before_destroy = true }
 
-  node_group_name = "${var.eks_ng_public_name}-eks-ng-public"
+  node_group_name = "${var.eks_ng_private_name}-eks-ng-private"
   node_role_arn   = aws_iam_role.eks_nodegroup_role.arn
-  # subnet_ids      = module.vpc.public_subnets
-  subnet_ids = var.vpc_public_subnets
+  # subnet_ids      = module.vpc.private_subnets
+  subnet_ids = var.vpc_private_subnets
 
   ami_type       = var.ami_type # "AL2_x86_64"
   capacity_type  = "SPOT"
@@ -48,15 +48,15 @@ resource "aws_eks_node_group" "eks_ng_public" {
 # Tag Instances in autoscaling group
 ######################################
 resource "aws_autoscaling_group_tag" "this" {
-  autoscaling_group_name = aws_eks_node_group.eks_ng_public.resources[0].autoscaling_groups[0].name
+  autoscaling_group_name = aws_eks_node_group.eks_ng_private.resources[0].autoscaling_groups[0].name
   tag {
     key                 = "Name"
-    value               = "${var.eks_ng_public_name}-eks-ng-public-worker"
+    value               = "${var.eks_ng_private_name}-eks-ng-private-worker"
     propagate_at_launch = true
   }
 }
 
 #output "zzzz"  {
-# value = aws_eks_node_group.eks_ng_public
-#  value = aws_eks_node_group.eks_ng_public.resources[0].autoscaling_groups[0].name
+# value = aws_eks_node_group.eks_ng_private
+#  value = aws_eks_node_group.eks_ng_private.resources[0].autoscaling_groups[0].name
 #  }

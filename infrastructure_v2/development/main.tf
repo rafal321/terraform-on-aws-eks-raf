@@ -19,7 +19,7 @@ output "vpc_out" { value = module.vpc }
 # Example module.vpc.vpc_aws_region
 
 # == BASTION ========================
-
+/*
 module "bastion" {
   source                = "../modules/bastion/"
   bastion_subnet        = element(module.vpc.vpc_public_subnets, 0)
@@ -33,7 +33,7 @@ module "bastion" {
   bastion_cidr_blocks   = ["54.171.162.185/32"]
 }
 output "bastion_out" { value = module.bastion }
-
+*/
 # == EKS (resource) ========================
 module "eks" {
   source             = "../modules/eks/"
@@ -42,25 +42,48 @@ module "eks" {
   aws_region         = "eu-west-1"
   aws_profile        = "dev"
   vpc_public_subnets = module.vpc.vpc_public_subnets
-  #cluster_service_ipv4_cidr=
-  #cluster_endpoint_private_access=
-  #cluster_endpoint_public_access=
-  cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"]
+  #cluster_service_ipv4_cidr= "172.20.0.0/16"
+  #cluster_endpoint_private_access= false
+  #cluster_endpoint_public_access= true
+  cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"] # 109.255.232.193/32
 }
 output "eks_out" { value = module.eks }
 # Example module.eks.eks_cluster_id
 
-# == EKS Node Group Public (resource) ========================
+# == EKS Node Group Public/Private - SPOT (resource) =================
 
-# module "eks_ng_public" {
-#   source             = "../modules/eks_ng_public/"
-#   eks_ng_public_name = "raf"
-#   aws_region         = "eu-west-1"
-#   aws_profile        = "dev"
-#   vpc_public_subnets = module.vpc.vpc_public_subnets
-#   eks_cluster_id     = module.eks.eks_cluster_id
-# }
+module "eks_ng_public" {
+  source             = "../modules/eks_ng_public/"
+  eks_ng_public_name = "raf"
+  aws_region         = "eu-west-1"
+  aws_profile        = "dev"
+  vpc_public_subnets = module.vpc.vpc_public_subnets
+  eks_cluster_id     = module.eks.eks_cluster_id
+  ami_type           = "AL2_x86_64"
+  disk_size          = 15
+  instance_types     = ["t3.medium", "t2.medium", "t3a.medium"]
+  min_size           = 1
+  desired_size       = 1
+  max_size           = 8
+}
+output "eks_ng_public_out" { value = module.eks_ng_public }
 
-# next 65. Step-05: Review EKS Variables and EKS Outputs
+module "eks_ng_private" {
+  source             = "../modules/eks_ng_private/"
+  eks_ng_private_name = "raf2"
+  aws_region         = "eu-west-1"
+  aws_profile        = "dev"
+  vpc_private_subnets = module.vpc.vpc_private_subnets
+  eks_cluster_id     = module.eks.eks_cluster_id
+  ami_type           = "AL2_x86_64"
+  disk_size          = 15
+  instance_types     = ["t3.medium", "t2.medium", "t3a.medium"]
+  min_size           = 1
+  desired_size       = 1
+  max_size           = 8
+}
+output "eks_ng_private_out" { value = module.eks_ng_private }
+
+# next 65. Step-05: Review EKS Variables and EKS Outputs !!!!!!!!!!!!!!!!!!!!!!!
 
 # == EKS Node Group Private (resource) ========================

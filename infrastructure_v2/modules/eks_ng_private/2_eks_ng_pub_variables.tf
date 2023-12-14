@@ -1,10 +1,10 @@
-variable "vpc_public_subnets" {
-  description = "var.vpc_public_subnets"
+variable "vpc_private_subnets" {
+  description = "var.vpc_private_subnets"
   type        = list(any)
   default     = null
 }
-variable "eks_ng_public_name" {
-  description = "var.eks_ng_public_name"
+variable "eks_ng_private_name" {
+  description = "var.eks_ng_private_name"
   type        = string
   default     = "raf"
 }
