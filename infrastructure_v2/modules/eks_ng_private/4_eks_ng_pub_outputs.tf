@@ -17,3 +17,8 @@ output "node_group_private_version" {
   description = "Private Node Group Kubernetes Version"
   value       = aws_eks_node_group.eks_ng_private.version
 }
+
+output "node_group_private_asg_name" {
+  description = "Private Node Group Kubernetes Version"
+  value       = aws_eks_node_group.eks_ng_private.resources[0].autoscaling_groups[0].name
+}

@@ -14,14 +14,14 @@ resource "aws_eks_node_group" "eks_ng_private" {
   instance_types = var.instance_types
 
   #remote_access {
-  #   ec2_ssh_key = "eks-terraform-key"
+  #   ec2_ssh_key = "eks-terraform-key"     # 71.step-11
   # }
 
   scaling_config {
     desired_size = var.desired_size
     min_size     = var.min_size
     max_size     = var.max_size
-  }
+   }
 
   # Desired max percentage of unavailable worker nodes during node group update.
   update_config {
