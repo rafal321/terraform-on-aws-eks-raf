@@ -7,6 +7,7 @@ resource "aws_eks_node_group" "eks_ng_private" {
   node_role_arn   = aws_iam_role.eks_nodegroup_role.arn
   # subnet_ids      = module.vpc.private_subnets
   subnet_ids = var.vpc_private_subnets
+  version = "1.28"
 
   ami_type       = var.ami_type # "AL2_x86_64"
   capacity_type  = "SPOT"
@@ -37,11 +38,15 @@ resource "aws_eks_node_group" "eks_ng_private" {
     aws_iam_role_policy_attachment.eks-AmazonEC2ContainerRegistryReadOnly,
   ]
   labels = {
-    lifecycle = "Spot"
+    lifecycle = "spot"
     rk_label  = "rk_label_val01"
+    node_group = "private"
+    ami_type = var.ami_type
   }
   tags = {
     tagat34hx3a = "value34hx3a"
+    node_group = "private"
+    ami_type = var.ami_type
   }
 }
 ######################################

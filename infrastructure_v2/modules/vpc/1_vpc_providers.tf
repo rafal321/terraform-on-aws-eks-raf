@@ -3,7 +3,7 @@
 #   # required_version = "~> 1.6"
 #   required_providers {
 #     aws = {
-#       source  = "hashicorp/aws"         # Moved to development/main.tf
+#       source  = "hashicorp/aws"         RAF: moved to development/main.tf
 #       version = "~> 5.0"
 #     }
 #   }

@@ -37,11 +37,15 @@ resource "aws_eks_node_group" "eks_ng_public" {
     aws_iam_role_policy_attachment.eks-AmazonEC2ContainerRegistryReadOnly,
   ]
   labels = {
-    lifecycle = "Spot"
+    lifecycle = "spot"
     rk_label  = "rk_label_val01"
+    node_group = "public"
+    ami_type = var.ami_type
   }
   tags = {
     tagat34hx3a = "value34hx3a"
+    node_group = "public"
+    ami_type = var.ami_type
   }
 }
 ######################################

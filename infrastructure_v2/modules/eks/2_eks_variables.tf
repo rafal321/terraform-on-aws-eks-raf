@@ -9,16 +9,16 @@ variable "eks_name" {
   type        = string
   default     = "raf"
 }
-variable "aws_region" {
-  description = "var.aws_region"
-  type        = string
-  default     = "eu-west-1"
-}
-variable "aws_profile" {
-  description = "var.profile"
-  type        = string
-  default     = "default"
-}
+# variable "aws_region" {
+#   description = "var.aws_region"
+#   type        = string
+#   default     = "eu-west-1"
+# }
+# variable "aws_profile" {
+#   description = "var.profile"
+#   type        = string
+#   default     = "default"
+# }
 variable "cluster_service_ipv4_cidr" {
   description = "service ipv4 cidr for the kubernetes cluster"
   type        = string

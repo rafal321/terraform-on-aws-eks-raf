@@ -2,7 +2,7 @@ variable "bastion_subnet" { type = string }
 variable "aws_region" { type = string }
 variable "bastion_instance_type" { type = string }
 variable "bastion_key_name" { type = string }
-variable "bastion_iam_role" { type = string }
+variable "bastion_iam_profile" { type = string }
 variable "bastion_tag_name" { type = string }
 variable "bastion_vol_size" { type = number }
 variable "bastion_vpc_vpc_id" {type = string}
@@ -29,10 +29,10 @@ resource "aws_instance" "aws_instance" {
   subnet_id            = var.bastion_subnet
   vpc_security_group_ids = [aws_security_group.allow_ssh.id]
   key_name             = var.bastion_key_name
-  iam_instance_profile = var.bastion_iam_role
+  iam_instance_profile = var.bastion_iam_profile
   tags = {
     Name = var.bastion_tag_name
-    managed_by     = "terraform"
+    ec2_specificTag     = "ec2_value"
   }
     root_block_device {
     volume_size           = var.bastion_vol_size
@@ -41,7 +41,7 @@ resource "aws_instance" "aws_instance" {
     delete_on_termination = true
     tags = {
       Name       = "${var.bastion_tag_name}-root"
-      managed_by = "terraform"
+      ec2_specificTag     = "ec2_value-root"
       }
   }
 }
@@ -66,7 +66,7 @@ resource "aws_security_group" "allow_ssh" {
   }
   tags = {
     Name = "${var.bastion_tag_name}-sg"
-    managed_by = "terraform"
+    ec2_specificTag     = "ec2_value-sg"
   }
 }
 # ===========================================
