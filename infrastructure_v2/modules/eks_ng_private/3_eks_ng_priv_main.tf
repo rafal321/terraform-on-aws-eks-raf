@@ -7,7 +7,7 @@ resource "aws_eks_node_group" "eks_ng_private" {
   node_role_arn   = aws_iam_role.eks_nodegroup_role.arn
   # subnet_ids      = module.vpc.private_subnets
   subnet_ids = var.vpc_private_subnets
-  version = "1.28"
+  # version = "1.28"                      # RAF: use for upgrade only
 
   ami_type       = var.ami_type # "AL2_x86_64"
   capacity_type  = "SPOT"

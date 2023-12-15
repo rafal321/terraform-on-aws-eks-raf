@@ -20,18 +20,18 @@ provider "aws" {
     }
   }
 }
-    # RAF Zrob sekcje Section 12: Terraform Remote State Storage
+
 ##############################################################################
 # #### VPC ###################################################################
-module "vpc" {
-  source = "../modules/vpc/"
-  #E aws_region         = "eu-west-1"
-  #E aws_profile        = "dev"
-  vpc_name           = "rkdev1"
-  enable_nat_gateway = true
-  single_nat_gateway = true
-}
-output "vpc_out" { value = module.vpc }                   # Example module.vpc.vpc_aws_region
+# module "vpc" {
+#   source = "../modules/vpc/"
+#   #E aws_region         = "eu-west-1"
+#   #E aws_profile        = "dev"
+#   vpc_name           = "rkdev1"
+#   enable_nat_gateway = true
+#   single_nat_gateway = true
+# }
+# output "vpc_out" { value = module.vpc }                   # Example module.vpc.vpc_aws_region
 #################################################################################
 ###### BASTION ##################################################################
 /*
@@ -51,60 +51,44 @@ output "bastion_out" { value = module.bastion }
 */
 ########################################################################################
 ###### EKS (resource) ##################################################################
-module "eks" {
-  source             = "../modules/eks/"
-  eks_name           = "raf-eks-cluster"
-  cluster_version    = "1.28"
-  # aws_region         = "eu-west-1"
-  # aws_profile        = "dev"
-  vpc_public_subnets = module.vpc.vpc_public_subnets          # where eks ENIs are created
-  # cluster_service_ipv4_cidr= "172.20.0.0/16"
-  # cluster_endpoint_private_access= false   # was false
-  # cluster_endpoint_public_access= true   # was true
-  cluster_endpoint_public_access_cidrs = [
-    "0.0.0.0/0"
-    # "109.255.232.193/32","185.122.134.73/32","3.254.50.156/32" RAF: NodeCreationFailure: Instances failed to join the kubernetes cluster >> ensure that either the cluster's private endpoint access is enabled, or that you have correctly configured CIDR blocks for public endpoint access.
-    ] 
-}
-output "eks_out" { value = module.eks }   # Example module.eks.eks_cluster_id
+# module "eks" {
+#   source             = "../modules/eks/"
+#   eks_name           = "raf-eks-cluster"
+#   cluster_version    = "1.28"
+#   # aws_region         = "eu-west-1"
+#   # aws_profile        = "dev"
+#   vpc_public_subnets = module.vpc.vpc_public_subnets          # where eks ENIs are created
+#   # cluster_service_ipv4_cidr= "172.20.0.0/16"
+#   # cluster_endpoint_private_access= false   # was false
+#   # cluster_endpoint_public_access= true   # was true
+#   cluster_endpoint_public_access_cidrs = [
+#     "0.0.0.0/0"
+#     # "109.255.232.193/32","185.122.134.73/32","3.254.50.156/32" RAF: NodeCreationFailure: Instances failed to join the kubernetes cluster >> ensure that either the cluster's private endpoint access is enabled, or that you have correctly configured CIDR blocks for public endpoint access.
+#     ] 
+# }
+# output "eks_out" { value = module.eks }   # Example module.eks.eks_cluster_id
 ########################################################################################
 ###### EKS Node Group Public - SPOT (resource) #########################################
-module "eks_ng_public" {
-  source             = "../modules/eks_ng_public/"
-  eks_ng_public_name = "raf-1"
-  #aws_region         = "eu-west-1"
-  #aws_profile        = "dev"
-  vpc_public_subnets = module.vpc.vpc_public_subnets
-  eks_cluster_id     = module.eks.eks_cluster_id
-  ami_type           = "AL2_x86_64"
-  disk_size          = 15
-  instance_types     = ["t3.medium", "t2.medium", "t3a.medium"]
-  min_size           = 1
-  desired_size       = 1
-  max_size           = 8
-}
-output "eks_ng_public_out" { value = module.eks_ng_public }
+# module "eks_ng_public" {
+#   source             = "../modules/eks_ng_public/"
+#   eks_ng_public_name = "raf-1"
+#   #aws_region         = "eu-west-1"
+#   #aws_profile        = "dev"
+#   vpc_public_subnets = module.vpc.vpc_public_subnets
+#   eks_cluster_id     = module.eks.eks_cluster_id
+#   ami_type           = "AL2_x86_64"
+#   disk_size          = 15
+#   instance_types     = ["t3.medium", "t2.medium", "t3a.medium"]
+#   min_size           = 1
+#   desired_size       = 1
+#   max_size           = 8
+# }
+# output "eks_ng_public_out" { value = module.eks_ng_public }
 ########################################################################################
 ###### EKS Node Group Private - SPOT (resource) ########################################
-module "eks_ng_private" {                                                 # terraform destroy -target=module.eks_ng_private.aws_eks_node_group.eks_ng_private
-  source              = "../modules/eks_ng_private/"
-  eks_ng_private_name = "raf-2"
-  # aws_region          = "eu-west-1"
-  # aws_profile         = "dev"
-  vpc_private_subnets = module.vpc.vpc_private_subnets
-  eks_cluster_id      = module.eks.eks_cluster_id
-  ami_type            = "AL2_x86_64"
-  disk_size           = 15
-  instance_types      = ["t3.medium", "t2.medium", "t3a.medium"]
-  min_size            = 1
-  desired_size        = 1
-  max_size            = 8
-}
-output "eks_ng_private_out" { value = module.eks_ng_private }
-#--------------------------------------------
-# module "eks_ng_private3" {                                                 # terraform destroy -target=module.eks_ng_private.aws_eks_node_group.eks_ng_private
+# module "eks_ng_private" {                                                 # terraform destroy -target=module.eks_ng_private.aws_eks_node_group.eks_ng_private
 #   source              = "../modules/eks_ng_private/"
-#   eks_ng_private_name = "raf-3"
+#   eks_ng_private_name = "raf-2"
 #   # aws_region          = "eu-west-1"
 #   # aws_profile         = "dev"
 #   vpc_private_subnets = module.vpc.vpc_private_subnets
@@ -116,9 +100,11 @@ output "eks_ng_private_out" { value = module.eks_ng_private }
 #   desired_size        = 1
 #   max_size            = 8
 # }
-# output "eks_ng_private3_out" { value = module.eks_ng_private }
+# output "eks_ng_private_out" { value = module.eks_ng_private }
 ########################################################################################
 ###### Whatever next goes here  ########################################################
 
-# next 116. Step-01: Introduction to Terraform Remote State Storage and State Locking
+# next  116. Step-01: Introduction to Terraform Remote State Storage and State Locking
+#    &
+#       124. Step-04: Review Project-2: c1, c2, c3, c4 and IAM Role, Policy 
 
