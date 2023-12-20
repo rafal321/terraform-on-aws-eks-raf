@@ -44,9 +44,8 @@ resource "aws_eks_node_group" "eks_ng_private" {
     ami_type = var.ami_type
   }
   tags = {
-    tagat34hx3a = "value34hx3a"
-    node_group = "private"
-    ami_type = var.ami_type
+    tagat34hx3a = "value34hx3a" # these have no effect
+    node_group = "private2"
   }
 }
 ######################################
@@ -60,6 +59,7 @@ resource "aws_autoscaling_group_tag" "this" {
     propagate_at_launch = true
   }
 }
+
 
 #output "zzzz"  {
 # value = aws_eks_node_group.eks_ng_private
