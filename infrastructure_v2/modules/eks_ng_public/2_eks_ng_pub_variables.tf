@@ -36,7 +36,7 @@ variable "disk_size" {
 variable "instance_types" {
   description = "var.eks_cluster_id"
   type        = list(any)
-  default     = ["t3.medium", "t2.medium", "t3a.medium"]
+  default     = ["t3a.medium","t3.medium","t2.medium" ]
 }
 variable "min_size" {
   description = "var.eks_cluster_id"

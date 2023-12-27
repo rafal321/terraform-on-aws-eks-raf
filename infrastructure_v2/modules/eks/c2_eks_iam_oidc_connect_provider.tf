@@ -1,6 +1,6 @@
 # Datasource: AWS Partition
 # Use this data source to lookup information about the current AWS partition in which Terraform is working
-data "aws_partition" "current" {} 
+data "aws_partition" "current" {}
 
 # Resource: AWS IAM Open ID Connect Provider
 resource "aws_iam_openid_connect_provider" "oidc_provider" {
@@ -8,8 +8,8 @@ resource "aws_iam_openid_connect_provider" "oidc_provider" {
   thumbprint_list = [var.eks_oidc_root_ca_thumbprint]
   url             = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer
 
-    tags = {
-    Name = "${aws_eks_cluster.eks_cluster.name}-eks-irsa"
+  tags = {
+    Name    = "${aws_eks_cluster.eks_cluster.name}-eks-irsa"
     tag202  = "value202"
     Section = "122.Step-02"
   }

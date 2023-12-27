@@ -9,11 +9,12 @@ terraform {
   backend "s3" {
     bucket         = "863772705192-terraform.state"
     key            = "development/eks-cluster/terraform.tfstate"
-    dynamodb_table = "development-ekscluster"
     region         = "eu-west-1"
+    dynamodb_table = "development-ekscluster"
     profile        = "dev"
   }
 }
+
 provider "aws" {
   region  = "eu-west-1"
   profile = "dev"
@@ -25,7 +26,6 @@ provider "aws" {
       ManagedBy       = "terraform"
       Workspace       = terraform.workspace
     }
-
   }
 }
 
@@ -61,7 +61,7 @@ output "bastion_out" { value = module.bastion }
 */
 ########################################################################################
 ###### EKS (resource) ##################################################################
-module "eks" {
+/*module "eks" {
   source          = "../modules/eks/"
   eks_name        = "raf-eks-cluster"
   cluster_version = "1.28"
@@ -76,7 +76,10 @@ module "eks" {
     # "109.255.232.193/32","185.122.134.73/32","3.254.50.156/32" RAF: NodeCreationFailure: Instances failed to join the kubernetes cluster >> ensure that either the cluster's private endpoint access is enabled, or that you have correctly configured CIDR blocks for public endpoint access.
   ]
 }
-#>> output "eks_out" { value = module.eks } # Example module.eks.eks_cluster_id
+output "eks_out" { value = module.eks }*/
+
+# Example: module.eks.eks_cluster_id
+# Example: value = data.terraform_remote_state.eks.outputs.eks_out.eks_cluster_id  -> /home/ec2-user/terraform-on-aws-eks/13-EKS-IRSA/rk2-02-eks-irsa-demo-terraform-manifests/c2-remote-state-datasource.tf
 ########################################################################################
 ###### EKS Node Group Public - SPOT (resource) #########################################
 # module "eks_ng_public" {
@@ -96,21 +99,33 @@ module "eks" {
 # output "eks_ng_public_out" { value = module.eks_ng_public }
 ########################################################################################
 ###### EKS Node Group Private - SPOT (resource) ########################################
-module "eks_ng_private" {
-  source              = "../modules/eks_ng_private/"
-  eks_ng_private_name = "raf-2"
-  # aws_region          = "eu-west-1"
-  # aws_profile         = "dev"
-  vpc_private_subnets = module.vpc.vpc_private_subnets
-  eks_cluster_id      = module.eks.eks_cluster_id
-  ami_type            = "AL2_x86_64"
-  disk_size           = 15
-  instance_types      = ["t3.medium", "t2.medium", "t3a.medium"]
-  min_size            = 1
-  desired_size        = 1
-  max_size            = 8
-}
-#>> output "eks_ng_private_out" { value = module.eks_ng_private }
+# module "eks_ng_private" {
+#   source              = "../modules/eks_ng_private/"
+#   eks_ng_private_name = "raf-2"
+#   # aws_region          = "eu-west-1"
+#   # aws_profile         = "dev"
+#   vpc_private_subnets = module.vpc.vpc_private_subnets
+#   eks_cluster_id      = module.eks.eks_cluster_id
+#   ami_type            = "AL2_x86_64"
+#   disk_size           = 15
+#   instance_types      = ["t3.medium", "t2.medium", "t3a.medium"]
+#   min_size            = 1
+#   desired_size        = 1
+#   max_size            = 8
+# }
+# output "eks_ng_private_out" { value = module.eks_ng_private }
+########################################################################################
+###### RDS for MySQL  ########################################################
+# module "rds_for_mysql" {
+#   source              = "../modules/rds_for_mysql/"
+#   rds_for_mysql_name  = "raf-rds1"
+#   instance_class      = "db.t3.medium"
+#   replica_db_enable   = 0
+#   vpc_private_subnets = module.vpc.vpc_private_subnets
+#   vpc_vpc_id          = module.vpc.vpc_vpc_id
+#   vpc_vpc_cidr_block  = module.vpc.vpc_vpc_cidr_block
+# }
+# output "rds_for_mysql_out" { value = module.rds_for_mysql }
 ########################################################################################
 ###### Whatever next goes here  ########################################################
 
@@ -132,5 +147,9 @@ kubectl edit -n kube-system configmap/aws-auth
       username: whatever
       groups:
         - system:masters
+ 
+-130. Step-01: Introduction to EBS CSI using HELM
+  CSI provider with self managed Ad-ON
 
+- 
 */
