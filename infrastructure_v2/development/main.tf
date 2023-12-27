@@ -124,6 +124,7 @@ output "eks_out" { value = module.eks }*/
 #   vpc_private_subnets = module.vpc.vpc_private_subnets
 #   vpc_vpc_id          = module.vpc.vpc_vpc_id
 #   vpc_vpc_cidr_block  = module.vpc.vpc_vpc_cidr_block
+#   kms_key_id          = null
 # }
 # output "rds_for_mysql_out" { value = module.rds_for_mysql }
 ########################################################################################
