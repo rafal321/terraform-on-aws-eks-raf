@@ -7,9 +7,9 @@ variable "rds_for_mysql_name" {
   type        = string
   default     = "raf"
 }
-variable "vpc_private_subnets" {
-  description = "var.vpc_private_subnets"
-  type        = list(any)
+variable "vpc_database_subnet_group_name" {
+  description = "var.vpc_database_subnet_group_name"
+  type        = string #list(any)
   default     = null
 }
 variable "vpc_vpc_id" {
@@ -37,6 +37,12 @@ variable "kms_key_id" {
   type        = string
   default     = null
 }
+variable "storage_encrypted" {
+  description = "var.storage_encrypted"
+  type        = bool
+  default     = false
+}
+
 # ===============================================================================================
 resource "aws_security_group" "rds_for_mysql_sg" {
   name        = "allow-3306"
@@ -60,19 +66,20 @@ resource "aws_security_group" "rds_for_mysql_sg" {
   }
 }
 # ===============================================================================================
-resource "aws_db_instance" "default" { # master_db
-  identifier                          = var.rds_for_mysql_name
+resource "aws_db_instance" "master_db" {
+  identifier                          = "${var.rds_for_mysql_name}-rw"
   instance_class                      = var.instance_class
   engine                              = "mysql" # engine_version = "8.0" # if not then latest
-  username                            = "foo"
-  password                            = "foobarbaz"
+  username                            = "raf_admin"           # dbadmin
+  password                            = "raf_admin1234[]"     # dbpassword11
+  # db_name                             = "usermgmt"            # usermgmt
   backup_retention_period             = 5
   allocated_storage                   = 20
   max_allocated_storage               = 100
   storage_type                        = "gp3"
   parameter_group_name                = aws_db_parameter_group.default.name
   apply_immediately                   = true
-  db_subnet_group_name                = aws_db_subnet_group.default.name
+  db_subnet_group_name                = var.vpc_database_subnet_group_name
   option_group_name                   = aws_db_option_group.default.name
   vpc_security_group_ids              = [aws_security_group.rds_for_mysql_sg.id]
   auto_minor_version_upgrade          = true
@@ -82,12 +89,12 @@ resource "aws_db_instance" "default" { # master_db
   performance_insights_enabled        = false
   iam_database_authentication_enabled = false
   deletion_protection                 = false
-  storage_encrypted                   = false
+  storage_encrypted                   = var.storage_encrypted
+  kms_key_id                          = var.kms_key_id
   multi_az                            = false
   maintenance_window                  = "Mon:00:00-Mon:03:00"
   backup_window                       = "03:00-06:00"
   skip_final_snapshot                 = true
-  kms_key_id                          = var.kms_key_id
   enabled_cloudwatch_logs_exports     = ["error", "slowquery"]
   tags = {
     Name       = "master_dbT"
@@ -96,17 +103,18 @@ resource "aws_db_instance" "default" { # master_db
 }
 resource "aws_db_instance" "replica_db" {
   count                  = var.replica_db_enable
-  replicate_source_db    = aws_db_instance.default.id
+  identifier             = "${var.rds_for_mysql_name}-ro-${count.index + 1}"
+  replicate_source_db    = aws_db_instance.master_db.identifier
   instance_class         = var.instance_class
+  max_allocated_storage  = null
   vpc_security_group_ids = [aws_security_group.rds_for_mysql_sg.id]
   tags = {
     Name = "replica_dbT"
   }
 }
 # ===============================================================================================
-resource "aws_cloudwatch_metric_alarm" "foobar" {
-  alarm_name          = "master_db_cpu-rds"
-  dimensions          = { DBInstanceIdentifier = aws_db_instance.default.identifier }
+resource "aws_cloudwatch_metric_alarm" "master_db_cpu_rds_cw" {
+  alarm_name          = "master_db_cpu_rds"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 10
   metric_name         = "CPUUtilization"
@@ -118,6 +126,7 @@ resource "aws_cloudwatch_metric_alarm" "foobar" {
   treat_missing_data  = "notBreaching"
   actions_enabled     = false
   alarm_description   = "This metric monitors RDS cpu utilization"
+  dimensions          = { DBInstanceIdentifier = aws_db_instance.master_db.identifier }
 }
 # ===============================================================================================
 # https://www.terraform.io/docs/providers/aws/r/db_parameter_group.html
@@ -153,14 +162,16 @@ resource "aws_db_parameter_group" "default" {
     name  = "binlog_format"
     value = "ROW"
   }
-  # parameter {
-  #   name  = "performance_schema"                  
-  #   value = 1     # Static
-  # }
-  # parameter {
-  #   name  = "lower_case_table_names"
-  #   value = 1     # Static
-  # }
+  parameter {
+    name         = "performance_schema"
+    value        = 1 # Static
+    apply_method = "pending-reboot"
+  }
+  parameter {
+    name         = "lower_case_table_names"
+    value        = 1 # Static
+    apply_method = "pending-reboot"
+  }
   tags = {
     dbParmT = "dbParmV"
   }
@@ -172,7 +183,7 @@ resource "aws_db_option_group" "default" {
   engine_name              = "mysql"
   name                     = "option-g-name"
   major_engine_version     = "8.0"
-  option_group_description = "opt_ gr desc"
+  option_group_description = "opt gr desc"
   tags = {
     optionT = "optionV"
   }
@@ -180,14 +191,15 @@ resource "aws_db_option_group" "default" {
 # ===============================================================================================
 # https://www.terraform.io/docs/providers/aws/r/db_subnet_group.html
 
-resource "aws_db_subnet_group" "default" {
-  name        = "aws-db-subnet-group"
-  subnet_ids  = var.vpc_private_subnets
-  description = "aws_db_subnet_group description"
-  tags = {
-    taggT = "taggV"
-  }
-}
+# resource "aws_db_subnet_group" "default" {    # created by vpc module
+#   name        = "aws-db-subnet-group"
+#   subnet_ids  = var.vpc_private_subnets
+#   description = "aws_db_subnet_group description"
+#   tags = {
+#     taggT = "taggV"
+#   }
+# }
 
 # ===============================================================================================
-output "master_db_endpoint" { value = aws_db_instance.default.address }
+output "master_db_endpoint" { value = aws_db_instance.master_db.address }
+

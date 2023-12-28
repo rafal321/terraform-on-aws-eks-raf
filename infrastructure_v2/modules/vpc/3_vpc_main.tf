@@ -21,7 +21,7 @@ module "vpc" {
   # enable_flow_log                                 = true
   # flow_log_cloudwatch_log_group_retention_in_days = 7
   # flow_log_max_aggregation_interval               = 60
-  create_database_subnet_group = false
+  create_database_subnet_group = true
   public_subnet_tags           = { "kubernetes.io/role/elb" = "1" }
   private_subnet_tags          = { "kubernetes.io/role/internal-elb" = "1" }
   tags = {

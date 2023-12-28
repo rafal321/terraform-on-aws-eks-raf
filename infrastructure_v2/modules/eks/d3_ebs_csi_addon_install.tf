@@ -1,7 +1,7 @@
 resource "aws_eks_addon" "ebs_eks_addon" {
   depends_on               = [
     aws_iam_role_policy_attachment.ebs_csi_iam_role_policy_attach,
-    aws_eks_cluster.eks_cluster   # Raf: to fix this module.eks.aws_eks_addon.ebs_eks_addon: Still creating... [15m0s elapsed]
+    aws_eks_cluster.eks_cluster   # Raf: to fix this module.eks.aws_eks_addon.ebs_eks_addon: Still creating... 
   ]
   cluster_name             = aws_eks_cluster.eks_cluster.id
   addon_name               = "aws-ebs-csi-driver"
@@ -11,4 +11,7 @@ resource "aws_eks_addon" "ebs_eks_addon" {
 /*
 155. Step-02: Create EBS CSI Add-On Terraform Resource
 aws eks list-addons --cluster-name raf-eks-cluster
+
+# Raf: to fix this module.eks.aws_eks_addon.ebs_eks_addon: Still creating... [15m0s elapsed]
+ it shoud be created with nodegroup as it waits for nodegroup. when node group is  ready addon creates fast 
 */

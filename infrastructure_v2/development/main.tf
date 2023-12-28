@@ -29,10 +29,8 @@ provider "aws" {
   }
 }
 
-
-
 ##############################################################################
-# #### VPC ###################################################################
+# #### VPC (module) ##########################################################
 module "vpc" {
   source = "../modules/vpc/"
   #E aws_region         = "eu-west-1"
@@ -43,7 +41,7 @@ module "vpc" {
 }
 output "vpc_out" { value = module.vpc } # Example module.vpc.vpc_aws_region
 #################################################################################
-###### BASTION ##################################################################
+###### BASTION (resource) #######################################################
 /*
 module "bastion" {
   source                = "../modules/bastion/"
@@ -53,15 +51,16 @@ module "bastion" {
   bastion_key_name      = "ops.devops.test.ec2-user"         # "testKey"
   bastion_iam_profile   = "OJT_EC2ControllerInstanceProfile" # null
   bastion_tag_name      = "Bastion"
-  bastion_vol_size      = 12
-  bastion_vpc_vpc_id    = module.vpc.vpc_vpc_id
-  bastion_cidr_blocks   = ["54.171.162.185/32"]
+  bastion_vol_size    = 12
+  bastion_vpc_vpc_id  = module.vpc.vpc_vpc_id
+  bastion_cidr_blocks = ["54.171.162.185/32"]
 }
 output "bastion_out" { value = module.bastion }
 */
 ########################################################################################
 ###### EKS (resource) ##################################################################
-/*module "eks" {
+#/*
+module "eks" {
   source          = "../modules/eks/"
   eks_name        = "raf-eks-cluster"
   cluster_version = "1.28"
@@ -76,63 +75,67 @@ output "bastion_out" { value = module.bastion }
     # "109.255.232.193/32","185.122.134.73/32","3.254.50.156/32" RAF: NodeCreationFailure: Instances failed to join the kubernetes cluster >> ensure that either the cluster's private endpoint access is enabled, or that you have correctly configured CIDR blocks for public endpoint access.
   ]
 }
-output "eks_out" { value = module.eks }*/
-
+output "eks_out" { value = module.eks }
+#*/
 # Example: module.eks.eks_cluster_id
 # Example: value = data.terraform_remote_state.eks.outputs.eks_out.eks_cluster_id  -> /home/ec2-user/terraform-on-aws-eks/13-EKS-IRSA/rk2-02-eks-irsa-demo-terraform-manifests/c2-remote-state-datasource.tf
 ########################################################################################
 ###### EKS Node Group Public - SPOT (resource) #########################################
-# module "eks_ng_public" {
-#   source             = "../modules/eks_ng_public/"
-#   eks_ng_public_name = "raf-1"
-#   #aws_region         = "eu-west-1"
-#   #aws_profile        = "dev"
-#   vpc_public_subnets = module.vpc.vpc_public_subnets
-#   eks_cluster_id     = module.eks.eks_cluster_id
-#   ami_type           = "AL2_x86_64"
-#   disk_size          = 15
-#   instance_types     = ["t3.medium", "t2.medium", "t3a.medium"]
-#   min_size           = 1
-#   desired_size       = 1
-#   max_size           = 8
-# }
-# output "eks_ng_public_out" { value = module.eks_ng_public }
+/*
+module "eks_ng_public" {
+  source             = "../modules/eks_ng_public/"
+  eks_ng_public_name = "raf-1"
+  #aws_region         = "eu-west-1"
+  #aws_profile        = "dev"
+  vpc_public_subnets = module.vpc.vpc_public_subnets
+  eks_cluster_id     = module.eks.eks_cluster_id
+  ami_type           = "AL2_x86_64"
+  disk_size          = 15
+  instance_types     = ["t3.medium", "t2.medium", "t3a.medium"]
+  min_size           = 1
+  desired_size       = 1
+  max_size           = 8
+}
+output "eks_ng_public_out" { value = module.eks_ng_public }
+*/
 ########################################################################################
 ###### EKS Node Group Private - SPOT (resource) ########################################
-# module "eks_ng_private" {
-#   source              = "../modules/eks_ng_private/"
-#   eks_ng_private_name = "raf-2"
-#   # aws_region          = "eu-west-1"
-#   # aws_profile         = "dev"
-#   vpc_private_subnets = module.vpc.vpc_private_subnets
-#   eks_cluster_id      = module.eks.eks_cluster_id
-#   ami_type            = "AL2_x86_64"
-#   disk_size           = 15
-#   instance_types      = ["t3.medium", "t2.medium", "t3a.medium"]
-#   min_size            = 1
-#   desired_size        = 1
-#   max_size            = 8
-# }
-# output "eks_ng_private_out" { value = module.eks_ng_private }
+#/*
+module "eks_ng_private" {
+  source              = "../modules/eks_ng_private/"
+  eks_ng_private_name = "raf-2"
+  # aws_region          = "eu-west-1"
+  # aws_profile         = "dev"
+  vpc_private_subnets = module.vpc.vpc_private_subnets
+  eks_cluster_id      = module.eks.eks_cluster_id
+  ami_type            = "AL2_x86_64" # NEXT TIME is ssm enabled? "BOTTLEROCKET_x86_64"
+  disk_size           = 15
+  instance_types      = ["t3a.medium", "t3.medium", "t2.medium"]
+  min_size            = 1
+  desired_size        = 2
+  max_size            = 8
+}
+output "eks_ng_private_out" { value = module.eks_ng_private }
+#*/
 ########################################################################################
-###### RDS for MySQL  ########################################################
-# module "rds_for_mysql" {
-#   source              = "../modules/rds_for_mysql/"
-#   rds_for_mysql_name  = "raf-rds1"
-#   instance_class      = "db.t3.medium"
-#   replica_db_enable   = 0
-#   vpc_private_subnets = module.vpc.vpc_private_subnets
-#   vpc_vpc_id          = module.vpc.vpc_vpc_id
-#   vpc_vpc_cidr_block  = module.vpc.vpc_vpc_cidr_block
-#   kms_key_id          = null
-# }
-# output "rds_for_mysql_out" { value = module.rds_for_mysql }
+###### RDS for MySQL  (resource) #######################################################
+#/*
+module "rds_for_mysql" {
+  source                         = "../modules/rds_for_mysql/"
+  rds_for_mysql_name             = "raf-rds2"
+  instance_class                 = "db.t4g.medium" # "db.t3.medium"
+  replica_db_enable              = 0
+  vpc_database_subnet_group_name = module.vpc.vpc_database_subnet_group_name
+  vpc_vpc_id                     = module.vpc.vpc_vpc_id
+  vpc_vpc_cidr_block             = module.vpc.vpc_vpc_cidr_block
+  kms_key_id                     = null # "arn:aws:kms:eu-west-1:863772705192:key/mrk-92b9f6b3d690460bbcb6d3c2951f39b7"
+  storage_encrypted              = false
+}
+output "rds_for_mysql_out" { value = module.rds_for_mysql }
+# */
 ########################################################################################
 ###### Whatever next goes here  ########################################################
 
-# next  116. Step-01: Introduction to Terraform Remote State Storage and State Locking
-#    &
-#       124. Step-04: Review Project-2: c1, c2, c3, c4 and IAM Role, Policy 
 
 ########################
 /*
@@ -148,9 +151,25 @@ kubectl edit -n kube-system configmap/aws-auth
       username: whatever
       groups:
         - system:masters
- 
--130. Step-01: Introduction to EBS CSI using HELM
-  CSI provider with self managed Ad-ON
+######################## 
+----------------------------------------------------
+I  ] NEXT: aws-eks-kubernetes-masterclass
+    Section 10: ALB Ingress
+    ... HELM stuff ...
+    /home/ec2-user/aws-eks-kubernetes-masterclass/08-NEW-ELB-Application-LoadBalancers
+ - - - - - - - - - - - - - - - - - - - - - - - - - -
+II ] NEXT: terraform-on-aws-eks
+    Section 26. AWS Load Balancer Controller Install using Terraform Helm Provider 
+    ... HELM stuff ...
+----------------------------------------------------
 
-- 
+resource "aws_instance" "rkec2" {
+ami = ...  
+instance_type (
+  terraform.workspace == "default" ? "t3.small" : "t3.micro"
+)
+}
+
+
+
 */
