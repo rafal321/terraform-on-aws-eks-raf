@@ -43,6 +43,29 @@ variable "storage_encrypted" {
   default     = false
 }
 
+# -- cred [1] --------------
+variable "username" {
+  description = "master user" # export TF_VAR_username=
+  type        = string
+  sensitive   = true
+}
+variable "password" {
+  description = "master password" # export TF_VAR_password=
+  type        = string
+  sensitive   = true
+}
+# -- cred [2] --------------
+data "aws_ssm_parameter" "foo" {
+  name = "foo"
+}
+# -- cred [3]  - returns json --------  {"username": "myuser", "password": "mypassword"}
+data "aws_secretsmanager_secret_version" "creds" {
+  secret_id = "db_creds_v3"
+}
+locals {
+  db_creds = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)
+} # username = local.db_creds.username  |  password = local.db_creds.password
+
 # ===============================================================================================
 resource "aws_security_group" "rds_for_mysql_sg" {
   name        = "allow-3306"
@@ -70,9 +93,9 @@ resource "aws_db_instance" "master_db" {
   identifier                          = "${var.rds_for_mysql_name}-rw"
   instance_class                      = var.instance_class
   engine                              = "mysql" # engine_version = "8.0" # if not then latest
-  username                            = "raf_admin"           # dbadmin
-  password                            = "raf_admin1234[]"     # dbpassword11
-  # db_name                             = "usermgmt"            # usermgmt
+  username                            = var.username
+  password                            = var.password
+  db_name                             = null # "usermgmt"
   backup_retention_period             = 5
   allocated_storage                   = 20
   max_allocated_storage               = 100

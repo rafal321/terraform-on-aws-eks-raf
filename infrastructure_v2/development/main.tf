@@ -130,6 +130,8 @@ module "rds_for_mysql" {
   vpc_vpc_cidr_block             = module.vpc.vpc_vpc_cidr_block
   kms_key_id                     = null # "arn:aws:kms:eu-west-1:863772705192:key/mrk-92b9f6b3d690460bbcb6d3c2951f39b7"
   storage_encrypted              = false
+  username = null
+  password = null
 }
 output "rds_for_mysql_out" { value = module.rds_for_mysql }
 # */
@@ -171,5 +173,6 @@ instance_type (
 }
 
 
+dbadmin  dbpassword11
 
 */
