@@ -30,7 +30,7 @@ resource "aws_iam_role" "ebs_csi_iam_role" {
           Federated = "${aws_iam_openid_connect_provider.oidc_provider.arn}"
         }
         Condition = {
-          StringEquals = { # RAF: this creates service account
+          StringEquals = { # RAF: this creates service account - Trust Relationship
             "${local.aws_iam_oidc_connect_provider_extract_from_arn}:sub" : "system:serviceaccount:kube-system:ebs-csi-controller-sa"
           }
         }
@@ -49,7 +49,7 @@ resource "aws_iam_role_policy_attachment" "ebs_csi_iam_role_policy_attach" {
   role       = aws_iam_role.ebs_csi_iam_role.name
 }
 
-output "ebs_csi_iam_role_arn" {
-  description = "EBS CSI IAM Role ARN"
-  value       = aws_iam_role.ebs_csi_iam_role.arn
-}
+# output "ebs_csi_iam_role_arn" {
+#   description = "EBS CSI IAM Role ARN"
+#   value       = aws_iam_role.ebs_csi_iam_role.arn
+# }

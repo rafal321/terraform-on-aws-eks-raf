@@ -10,8 +10,89 @@ provider "aws" {
   region  = "eu-west-1"
   profile = "dev"
 }
-#======================================================= rm -rf .terraform* && rm -rf terraform*
+################################################################################
 
+
+################################################################################
+### DB CREDENTIALS START
+# -- cred [2] - ssm_parameter -------------
+# {"username":"dbadmin","password":"dbpassword11"}
+data "aws_ssm_parameter" "db_creds" {
+  name = "rk_terraform_db_cred"
+}
+
+resource "aws_security_group" "allow_tls" {
+  name        = "allow_tls"
+  description = "Allow TLS inbound traffic"
+  vpc_id      = "vpc-f792228e" # default vpc 172.31.0.0/16
+  ingress {
+    description = "TLS from VPC"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  tags = {
+    Name   = "allow_tls"
+    reason = "playground"
+    # has = data.aws_ssm_parameter.db_creds.value
+    val1 = local.db_creds_local.username
+    val2 = local.db_creds_local.password
+  }
+}
+
+locals {
+  db_creds_local = jsondecode(data.aws_ssm_parameter.db_creds.insecure_value)
+} # username = local.db_creds.username  |  password = local.db_creds.password
+
+
+output "sg_out_1" {
+  value = aws_security_group.allow_tls.tags
+}
+
+output "data1" {
+  value = data.aws_ssm_parameter.db_creds.value
+  sensitive = true
+  # terraform output data1
+}
+
+output "data2" {
+  value = local.db_creds_local.username
+}
+output "data3" {
+  value = local.db_creds_local.password
+}
+### DB CREDENTIALS END
+################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#======================================================= rm -rf .terraform* && rm -rf terraform*
+/*
 resource "aws_security_group" "allow_tls" {
   name        = "allow_tls"
   description = "Allow TLS inbound traffic"
@@ -107,3 +188,4 @@ output "subnet_id" {
     aws_subnet.private[*].id
   ))
 }
+*/

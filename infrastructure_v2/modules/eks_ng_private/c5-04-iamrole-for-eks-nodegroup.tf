@@ -35,6 +35,11 @@ resource "aws_iam_role_policy_attachment" "eks-AmazonSSMManagedInstanceCore" {
   role       = aws_iam_role.eks_nodegroup_role.name
 }
 
+# resource "aws_iam_role_policy_attachment" "eks-AmazonS3FullAccess" {
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+#   role       = aws_iam_role.eks_nodegroup_role.name
+# }
+
 # resource "aws_iam_role_policy_attachment" "eks-CloudWatchAgentServerPolicy" {
 #   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 #   role       = aws_iam_role.eks_nodegroup_role.name
@@ -45,7 +50,3 @@ resource "aws_iam_role_policy_attachment" "eks-AmazonSSMManagedInstanceCore" {
 #   role       = aws_iam_role.eks_nodegroup_role.name
 # }
 
-# resource "aws_iam_role_policy_attachment" "eks-AmazonS3FullAccess" {
-#   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-#   role       = aws_iam_role.eks_nodegroup_role.name
-# }

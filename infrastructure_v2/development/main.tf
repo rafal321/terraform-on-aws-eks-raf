@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.12"
+    }
   }
   backend "s3" {
     bucket         = "863772705192-terraform.state"
@@ -64,9 +68,10 @@ module "eks" {
   source          = "../modules/eks/"
   eks_name        = "raf-eks-cluster"
   cluster_version = "1.28"
-  # aws_region         = "eu-west-1"
+  # aws_region      = module.vpc.vpc_aws_region # need for helm only e4_lbc...
+  # vpc_id          = module.vpc.vpc_vpc_id     # need for helm only e4_lbc...
   # aws_profile        = "dev"
-  vpc_public_subnets = module.vpc.vpc_public_subnets # where eks ENIs are created
+  vpc_public_subnets = module.vpc.vpc_public_subnets # where eks ENIs are created 
   # cluster_service_ipv4_cidr= "172.20.0.0/16"
   # cluster_endpoint_private_access= false   # was false
   # cluster_endpoint_public_access= true   # was true
@@ -119,7 +124,7 @@ output "eks_ng_private_out" { value = module.eks_ng_private }
 #*/
 ########################################################################################
 ###### RDS for MySQL  (resource) #######################################################
-#/*
+/*
 module "rds_for_mysql" {
   source                         = "../modules/rds_for_mysql/"
   rds_for_mysql_name             = "raf-rds2"
@@ -130,11 +135,9 @@ module "rds_for_mysql" {
   vpc_vpc_cidr_block             = module.vpc.vpc_vpc_cidr_block
   kms_key_id                     = null # "arn:aws:kms:eu-west-1:863772705192:key/mrk-92b9f6b3d690460bbcb6d3c2951f39b7"
   storage_encrypted              = false
-  username = null
-  password = null
 }
 output "rds_for_mysql_out" { value = module.rds_for_mysql }
-# */
+*/
 ########################################################################################
 ###### Whatever next goes here  ########################################################
 
@@ -159,6 +162,9 @@ I  ] NEXT: aws-eks-kubernetes-masterclass
     Section 10: ALB Ingress
     ... HELM stuff ...
     /home/ec2-user/aws-eks-kubernetes-masterclass/08-NEW-ELB-Application-LoadBalancers
+
+    Try to deploy this (to test kind: Ingress   (ALB controller)):
+    /home/ec2-user/aws-eks-kubernetes-masterclass/08-NEW-ELB-Application-LoadBalancers/08-02-ALB-Ingress-Basics/rk-01-kube-manifests-default-backend
  - - - - - - - - - - - - - - - - - - - - - - - - - -
 II ] NEXT: terraform-on-aws-eks
     Section 26. AWS Load Balancer Controller Install using Terraform Helm Provider 

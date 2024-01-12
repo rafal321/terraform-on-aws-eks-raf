@@ -9,8 +9,13 @@ variable "eks_name" {
   type        = string
   default     = "raf"
 }
-# variable "aws_region" {
+# variable "aws_region" { # need for helm only e4_lbc...
 #   description = "var.aws_region"
+#   type        = string
+#   default     = "eu-west-1"
+# }
+# variable "vpc_id" { # need for helm only e4_lbc...
+#   description = "vpc id"
 #   type        = string
 #   default     = "eu-west-1"
 # }
@@ -19,6 +24,9 @@ variable "eks_name" {
 #   type        = string
 #   default     = "default"
 # }
+data "aws_region" "current" {}
+# data.aws_region.current.name
+
 variable "cluster_service_ipv4_cidr" {
   description = "service ipv4 cidr for the kubernetes cluster"
   type        = string
@@ -54,3 +62,8 @@ variable "cluster_endpoint_public_access_cidrs" {
 #     commonTag = "commonValue"
 #   }
 # }
+
+
+
+
+# NEXT  204. Step-04: Understand IngressClass and review its TFConfig				pdf-216
