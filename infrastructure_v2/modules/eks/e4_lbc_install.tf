@@ -29,12 +29,12 @@ resource "helm_release" "loadbalancer_controller" {
     value = aws_iam_role.lbc_iam_role.arn
   }
 #   set {
-#     name  = "vpcId"                   
+#     name  = "vpcId"         # RAF: Redundant                
 #     value = var.vpc_id
 #     #  value = data.terraform_remote_state.eks.outputs.vpc_config[0].vpc_id
 #   }
 #   set {
-#     name  = "region"                  
+#     name  = "region"        # RAF: Redundant             
 #     value =  var.aws_region
 #   }
   set {

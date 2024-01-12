@@ -7,12 +7,12 @@ module "vpc" {
   source                  = "terraform-aws-modules/vpc/aws"
   version                 = "~> 5.1.2"
   name                    = "${var.vpc_name}-vpc"
-  cidr                    = "10.100.0.0/16"
+  cidr                    = "10.11.0.0/16"
   azs                     = ["${var.aws_region}a", "${var.aws_region}b"] #, "${var.aws_region}c"]
-  public_subnets          = ["10.100.11.0/24", "10.100.12.0/24"]         #, "10.90.13.0/24"]
-  private_subnets         = ["10.100.112.0/20", "10.100.128.0/20"]       #, "10.100.144.0/20"] #, "10.90.160.0/20", "10.90.176.0/20", "10.90.192.0/20"]
-  database_subnets        = ["10.100.211.0/24", "10.100.212.0/24"]       #, "10.90.213.0/24"]
-  intra_subnets           = ["10.100.221.0/24", "10.100.222.0/24"]       #, "10.90.223.0/24"]
+  public_subnets          = ["10.11.11.0/24", "10.11.12.0/24"]         #, "10.90.13.0/24"]
+  private_subnets         = ["10.11.112.0/20", "10.11.128.0/20"]       #, "10.100.144.0/20"] #, "10.90.160.0/20", "10.90.176.0/20", "10.90.192.0/20"]
+  database_subnets        = ["10.11.211.0/24", "10.11.212.0/24"]       #, "10.90.213.0/24"]
+  intra_subnets           = ["10.11.221.0/24", "10.11.222.0/24"]       #, "10.90.223.0/24"]
   enable_nat_gateway      = var.enable_nat_gateway                       # false - for quick deploy
   single_nat_gateway      = var.single_nat_gateway
   enable_dns_hostnames    = true
