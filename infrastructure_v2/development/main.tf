@@ -5,10 +5,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~> 2.12"
-    }
+    # helm = {
+    #   source  = "hashicorp/helm"
+    #   version = "~> 2.12"
+    # }
   }
   backend "s3" {
     bucket         = "863772705192-terraform.state"
@@ -66,8 +66,9 @@ output "bastion_out" { value = module.bastion }
 #/*
 module "eks" {
   source          = "../modules/eks/"
-  eks_name        = "raf-eks-cluster"
+  eks_name        = "raf-eks-cl"
   cluster_version = "1.28"
+  enable_ebs_eks_addon = false
   # aws_region      = module.vpc.vpc_aws_region # need for helm only e4_lbc...
   # vpc_id          = module.vpc.vpc_vpc_id     # need for helm only e4_lbc...
   # aws_profile        = "dev"
@@ -94,11 +95,11 @@ module "eks_ng_public" {
   #aws_profile        = "dev"
   vpc_public_subnets = module.vpc.vpc_public_subnets
   eks_cluster_id     = module.eks.eks_cluster_id
-  ami_type           = "AL2_x86_64"
-  disk_size          = 15
+  ami_type           = "BOTTLEROCKET_x86_64"  # "AL2_x86_64"
+  disk_size          = 25
   instance_types     = ["t3.medium", "t2.medium", "t3a.medium"]
-  min_size           = 1
-  desired_size       = 1
+  min_size           = 2
+  desired_size       = 2
   max_size           = 8
 }
 output "eks_ng_public_out" { value = module.eks_ng_public }
@@ -108,13 +109,13 @@ output "eks_ng_public_out" { value = module.eks_ng_public }
 #/*
 module "eks_ng_private" {
   source              = "../modules/eks_ng_private/"
-  eks_ng_private_name = "raf-2"
+  eks_ng_private_name = "raf-21"
   # aws_region          = "eu-west-1"
   # aws_profile         = "dev"
   vpc_private_subnets = module.vpc.vpc_private_subnets
   eks_cluster_id      = module.eks.eks_cluster_id
-  ami_type            = "AL2_x86_64" # NEXT TIME is ssm enabled? "BOTTLEROCKET_x86_64"
-  disk_size           = 15
+  ami_type            = "BOTTLEROCKET_x86_64" # "AL2_x86_64" # "BOTTLEROCKET_x86_64"
+  disk_size           = 25
   instance_types      = ["t3a.medium", "t3.medium", "t2.medium"]
   min_size            = 1
   desired_size        = 2
@@ -159,12 +160,8 @@ kubectl edit -n kube-system configmap/aws-auth
 ######################## 
 ----------------------------------------------------
 I  ] NEXT: aws-eks-kubernetes-masterclass
-    Section 10: ALB Ingress
-    ... HELM stuff ...
-    /home/ec2-user/aws-eks-kubernetes-masterclass/08-NEW-ELB-Application-LoadBalancers
-
-    Try to deploy this (to test kind: Ingress   (ALB controller)):
-    /home/ec2-user/aws-eks-kubernetes-masterclass/08-NEW-ELB-Application-LoadBalancers/08-02-ALB-Ingress-Basics/rk-01-kube-manifests-default-backend
+107. Step-01: Introduction to ALB Ingress External DNS Install
+08-06-Deploy-ExternalDNS-on-EKS
  - - - - - - - - - - - - - - - - - - - - - - - - - -
 II ] NEXT: terraform-on-aws-eks
     Section 26. AWS Load Balancer Controller Install using Terraform Helm Provider 

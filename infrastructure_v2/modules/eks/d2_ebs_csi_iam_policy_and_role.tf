@@ -37,12 +37,11 @@ resource "aws_iam_role" "ebs_csi_iam_role" {
       },
     ]
   })
-
   tags = {
-    tag-key = "${var.eks_name}-ebs-csi-iam-role"
+    tag-key              = "${var.eks_name}-ebs-csi-iam-role"
+    serviceaccount_in_ns = "kube-system"
   }
 }
-
 # Associate EBS CSI IAM Policy to EBS CSI IAM Role
 resource "aws_iam_role_policy_attachment" "ebs_csi_iam_role_policy_attach" {
   policy_arn = aws_iam_policy.ebs_csi_iam_policy.arn

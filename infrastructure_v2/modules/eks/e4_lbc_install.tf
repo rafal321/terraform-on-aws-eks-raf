@@ -1,6 +1,6 @@
- # Install AWS Load Balancer Controller using HELM
- # https://artifacthub.io/packages/helm/aws/aws-load-balancer-controller
- # https://github.com/aws/eks-charts/blob/master/stable/aws-load-balancer-controller/values.yaml
+# Install AWS Load Balancer Controller using HELM
+# https://artifacthub.io/packages/helm/aws/aws-load-balancer-controller
+# https://github.com/aws/eks-charts/blob/master/stable/aws-load-balancer-controller/values.yaml
 
 # Resource: Helm Release
 resource "helm_release" "loadbalancer_controller" {
@@ -22,25 +22,25 @@ resource "helm_release" "loadbalancer_controller" {
   }
   set {
     name  = "serviceAccount.name"
-    value = "aws-load-balancer-controller"      # can be auto generated
+    value = "aws-load-balancer-controller" # can be auto generated
   }
   set {
     name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = aws_iam_role.lbc_iam_role.arn
   }
-#   set {
-#     name  = "vpcId"         # RAF: Redundant                
-#     value = var.vpc_id
-#     #  value = data.terraform_remote_state.eks.outputs.vpc_config[0].vpc_id
-#   }
-#   set {
-#     name  = "region"        # RAF: Redundant             
-#     value =  var.aws_region
-#   }
   set {
     name  = "clusterName"
     value = aws_eks_cluster.eks_cluster.id
   }
+  #   set {
+  #     name  = "vpcId"         # RAF: Redundant                
+  #     value = var.vpc_id
+  #     #  value = data.terraform_remote_state.eks.outputs.vpc_config[0].vpc_id
+  #   }
+    set {
+      name  = "region"       
+      value =  "eu-west-1"
+    }
 }
 
 # Helm Release Outputs

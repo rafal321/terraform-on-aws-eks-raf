@@ -4,7 +4,7 @@ resource "aws_iam_policy" "lbc_iam_policy" { # this creates IAM Policy for LBC
   name        = "${var.eks_name}-AWSLoadBalancerControllerIAMPolicy"
   path        = "/"
   description = "AWS Load Balancer Controller IAM Policy"
-  policy = data.http.lbc_iam_policy.response_body
+  policy      = data.http.lbc_iam_policy.response_body
 }
 
 # output "lbc_iam_policy_arn" {
@@ -27,7 +27,7 @@ resource "aws_iam_role" "lbc_iam_role" {
           Federated = "${aws_iam_openid_connect_provider.oidc_provider.arn}"
         }
         Condition = {
-          StringEquals = {  # RAF: this creates service account - Trust Relationship
+          StringEquals = { # RAF: this creates service account - Trust Relationship
             "${local.aws_iam_oidc_connect_provider_extract_from_arn}:aud" : "sts.amazonaws.com",
             "${local.aws_iam_oidc_connect_provider_extract_from_arn}:sub" : "system:serviceaccount:kube-system:aws-load-balancer-controller"
           }

@@ -1,7 +1,13 @@
+variable "enable_ebs_eks_addon" {
+  description = "If set to true, enable ebs_eks_addon"
+  type        = bool
+}
+
 resource "aws_eks_addon" "ebs_eks_addon" {
-  depends_on               = [
+  count = var.enable_ebs_eks_addon ? 1 : 0
+  depends_on = [
     aws_iam_role_policy_attachment.ebs_csi_iam_role_policy_attach
-  # aws_eks_cluster.eks_cluster
+    # aws_eks_cluster.eks_cluster
   ]
   cluster_name             = aws_eks_cluster.eks_cluster.id
   addon_name               = "aws-ebs-csi-driver"

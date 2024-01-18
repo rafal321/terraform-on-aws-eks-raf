@@ -56,13 +56,6 @@ variable "cluster_endpoint_public_access_cidrs" {
   default     = ["0.0.0.0/0"]
   #  default     = ["10.30.0.0/16", "109.255.232.193/32"]
 }
-# Define Local Values in Terraform
-# locals {
-#   common_tags = {
-#     commonTag = "commonValue"
-#   }
-# }
-
 
 
 

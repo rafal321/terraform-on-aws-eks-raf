@@ -34,6 +34,10 @@ resource "aws_iam_role_policy_attachment" "eks-AmazonSSMManagedInstanceCore" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
   role       = aws_iam_role.eks_nodegroup_role.name
 }
+resource "aws_iam_role_policy_attachment" "eks-AutoScalingFullAccess" {
+  policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
+  role       = aws_iam_role.eks_nodegroup_role.name
+}
 
 # resource "aws_iam_role_policy_attachment" "eks-AmazonS3FullAccess" {
 #   policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
@@ -45,8 +49,5 @@ resource "aws_iam_role_policy_attachment" "eks-AmazonSSMManagedInstanceCore" {
 #   role       = aws_iam_role.eks_nodegroup_role.name
 # }
 
-# resource "aws_iam_role_policy_attachment" "eks-AutoScalingFullAccess" {
-#   policy_arn = "arn:aws:iam::aws:policy/AutoScalingFullAccess"
-#   role       = aws_iam_role.eks_nodegroup_role.name
-# }
+
 

@@ -42,11 +42,14 @@ resource "aws_eks_node_group" "eks_ng_private" {
     lifecycle       = "spot"
     node_group_name = "${var.eks_ng_private_name}-eks-ng-private"
   }
-  tags = {
-    network_type    = "private"
-    ami_type        = var.ami_type
-    lifecycle       = "spot"
-    node_group_name = "${var.eks_ng_private_name}-eks-ng-private"
+  tags = { # tags applied to EKS Nodegroup Tags - (NOT EC2s)
+    network_type                                      = "private"
+    ami_type                                          = var.ami_type
+    lifecycle                                         = "spot"
+    node_group_name                                   = "${var.eks_ng_private_name}-eks-ng-private"
+    rk_testing                                        = "AbC"
+    "k8s.io/cluster-autoscaler/enabled"               = "true"
+    "k8s.io/cluster-autoscaler/${var.eks_cluster_id}" = "owned"
   }
 }
 ######################################
