@@ -29,14 +29,18 @@ resource "helm_release" "cluster_autoscaler_release" {
     name  = "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
     value = aws_iam_role.cluster_autoscaler_iam_role.arn
   }
- # Additional Arguments (Optional) - To Test How to pass Extra Args for Cluster Autoscaler
+  # Additional Arguments (Optional) - To Test How to pass Extra Args for Cluster Autoscaler
   set {
-   name = "extraArgs.scan-interval"
-   value = "15s"                          # default is 10s
+    name  = "extraArgs.scan-interval"
+    value = "15s" # default is 10s
   }
   set {
-   name = "extraArgs.balance-similar-node-groups"
-   value = "false"                          
+    name  = "extraArgs.balance-similar-node-groups"
+    value = "false"
+  }
+  set {
+    name  = "extraArgs.skip-nodes-with-system-pods" # Raf: I added it
+    value = "false"
   }
 }
 #__________________________________________________

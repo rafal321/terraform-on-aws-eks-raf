@@ -15,6 +15,7 @@ resource "helm_release" "loadbalancer_controller" {
     # value = "602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon/aws-load-balancer-controller"
     # Changes based on Region - This is for us-east-1
     # Additional Reference: https://docs.aws.amazon.com/eks/latest/userguide/add-ons-images.html
+    # https://artifacthub.io/packages/helm/aws/aws-load-balancer-controller
   }
   set {
     name  = "serviceAccount.create"
@@ -37,10 +38,10 @@ resource "helm_release" "loadbalancer_controller" {
   #     value = var.vpc_id
   #     #  value = data.terraform_remote_state.eks.outputs.vpc_config[0].vpc_id
   #   }
-    set {
-      name  = "region"       
-      value =  "eu-west-1"
-    }
+  set {
+    name  = "region"
+    value = "eu-west-1"
+  }
 }
 
 # Helm Release Outputs

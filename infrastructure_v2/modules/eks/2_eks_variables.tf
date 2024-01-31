@@ -56,7 +56,3 @@ variable "cluster_endpoint_public_access_cidrs" {
   default     = ["0.0.0.0/0"]
   #  default     = ["10.30.0.0/16", "109.255.232.193/32"]
 }
-
-
-
-# NEXT  204. Step-04: Understand IngressClass and review its TFConfig				pdf-216

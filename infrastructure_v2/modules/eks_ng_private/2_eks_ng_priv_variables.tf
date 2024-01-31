@@ -41,16 +41,16 @@ variable "instance_types" {
 variable "min_size" {
   description = "var.eks_cluster_id"
   type        = number
-  default     = 1
+  default     = 2
 }
 variable "desired_size" {
   description = "var.eks_cluster_id"
   type        = number
-  default     = 1
+  default     = 2
 }
 variable "max_size" {
   description = "var.eks_cluster_id"
   type        = number
-  default     = 4
+  default     = 10
 }
 

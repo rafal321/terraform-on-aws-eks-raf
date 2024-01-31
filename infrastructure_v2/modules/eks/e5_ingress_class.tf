@@ -1,7 +1,7 @@
 # provider "kubernetes" {
 #   config_path = "~/.kube/config"
 # }
-# # Resource: Kubernetes Ingress Class
+# Resource: Kubernetes Ingress Class
 # resource "kubernetes_ingress_class_v1" "ingress_class_default" {
 #   depends_on = [helm_release.loadbalancer_controller]
 #   metadata {

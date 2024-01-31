@@ -5,10 +5,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    # helm = {
-    #   source  = "hashicorp/helm"
-    #   version = "~> 2.12"
-    # }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.12"
+    }
   }
   backend "s3" {
     bucket         = "863772705192-terraform.state"
@@ -117,9 +117,9 @@ module "eks_ng_private" {
   ami_type            = "BOTTLEROCKET_x86_64" # "AL2_x86_64" # "BOTTLEROCKET_x86_64"
   disk_size           = 25
   instance_types      = ["t3a.medium", "t3.medium", "t2.medium"]
-  min_size            = 1
-  desired_size        = 2
-  max_size            = 8
+  min_size            = 2
+  desired_size        = 2 # managed by autoscaling
+  max_size            = 10
 }
 output "eks_ng_private_out" { value = module.eks_ng_private }
 #*/

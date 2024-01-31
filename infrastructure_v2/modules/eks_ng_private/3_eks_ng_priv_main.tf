@@ -1,7 +1,12 @@
 # Create AWS EKS Node Group - private
 resource "aws_eks_node_group" "eks_ng_private" {
   cluster_name = var.eks_cluster_id
-  lifecycle { create_before_destroy = true }
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes        = [
+      scaling_config[0].desired_size,
+      ]
+  }
 
   node_group_name = "${var.eks_ng_private_name}-eks-ng-private"
   node_role_arn   = aws_iam_role.eks_nodegroup_role.arn
