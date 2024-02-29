@@ -2,9 +2,11 @@
 ################################################################################
 # VPC Module
 ################################################################################
+
 module "vpc" {
   source                  = "terraform-aws-modules/vpc/aws"
   version                 = "~> 5.1.2"
+  
   name                    = "${var.vpc_name}-vpc"
   cidr                    = "10.90.0.0/16"
   azs                     = ["${var.aws_region}a", "${var.aws_region}b"] #, "${var.aws_region}c"]
@@ -21,6 +23,8 @@ module "vpc" {
   # flow_log_cloudwatch_log_group_retention_in_days = 7
   # flow_log_max_aggregation_interval               = 60
   create_database_subnet_group = false
+  public_subnet_tags           = { "kubernetes.io/role/elb" = "1" }
+  private_subnet_tags          = { "kubernetes.io/role/internal-elb" = "1" }
   tags = {
     ManagedBy = "terraform"
     Tag10     = "value10"
@@ -29,7 +33,7 @@ module "vpc" {
     Test1     = "${var.vpc_name}-vpc"
     Test2     = var.aws_region
     # Test3     = var.backend_s3
-  }
+  } 
 }
 ################################################################################
 # VPC Endpoints Module

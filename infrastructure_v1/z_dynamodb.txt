@@ -6,7 +6,7 @@ cat <<EOF > z_dynamodb_schema.json
       "AttributeType": "S"
     }
   ],
-  "TableName": "vpc-terraform-state",
+  "TableName": "infrastructure_v3_db",
   "KeySchema": [
     {
       "AttributeName": "LockID",

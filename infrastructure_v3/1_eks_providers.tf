@@ -9,15 +9,14 @@ terraform {
   }
   #  backend "local" {}
   backend "s3" {
-    bucket = "705192-terraform.state"
-    key    = "terraform-state/infrastructure-v1/terraform.tfstate"
-    region = "eu-west-1"
-    dynamodb_table = "infrastructure_v1_db"
-    profile = "dev"
+    bucket         = "705192-terraform.state"
+    key            = "terraform-state/infrastructure-v3/terraform.tfstate"
+    region         = "eu-west-1"
+    dynamodb_table = "infrastructure_v3_db"
+    profile        = "dev"
   }
 }
 provider "aws" {
   region  = var.aws_region
   profile = var.aws_profile
 }
-

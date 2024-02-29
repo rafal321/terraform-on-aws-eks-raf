@@ -1,5 +1,5 @@
 resource "aws_iam_role" "eks_nodegroup_role" {
-  name = "${var.eks_ng_private_name}-eks-private-nodegroup-role"
+  name = "${var.cluster_name}-eks-nodegroup-role"
   assume_role_policy = jsonencode({
     Statement = [{
       Action = "sts:AssumeRole"
@@ -50,3 +50,4 @@ resource "aws_iam_role_policy_attachment" "eks-AutoScalingFullAccess" {
 #   role       = aws_iam_role.eks_nodegroup_role.name
 # }
 
+output "eks_nodegroup_role_arn" { value = aws_iam_role.eks_nodegroup_role.arn }

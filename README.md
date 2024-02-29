@@ -1,4 +1,18 @@
 # terraform-on-aws-eks-raf
+|#———————————————————————————
+| infrastructure_v1
+| [1] VPC - only (module)
+|#———————————————————————————
+| infrastructure_v2
+| [1] VPC     (module)
+| [2] EKS     (resource)
+| [3] NG
+| [4] configuration
+|       all on one state file
+|#———————————————————————————
+| infrastructure_v3
+| [1] EKS - only (resource)
+|#———————————————————————————
 Terraform on AWS EKS Kubernetes
 based on "terraform-on-aws-eks" by Kalyan Reddy Daida | stacksimplify 
 

@@ -5,7 +5,7 @@
       "AttributeType": "S"
     }
   ],
-  "TableName": "vpc-terraform-state",
+  "TableName": "infrastructure_v3_db",
   "KeySchema": [
     {
       "AttributeName": "LockID",

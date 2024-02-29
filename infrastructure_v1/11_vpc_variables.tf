@@ -7,10 +7,10 @@ variable "aws_region" {
 variable "vpc_name" {
   description = "var.vpc_name"
   type        = string
-  default     = "raf"
+  default     = "infra-v1"
 }
 variable "aws_profile" {
   description = "var.aws_profile"
   type        = string
-  default     = "default"
+  default     = "dev"
 }
