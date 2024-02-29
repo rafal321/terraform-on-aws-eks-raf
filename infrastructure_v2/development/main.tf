@@ -68,7 +68,7 @@ module "eks" {
   source          = "../modules/eks/"
   eks_name        = "raf-eks-cl"
   cluster_version = "1.28"
-  enable_ebs_eks_addon = false
+  enable_ebs_eks_addon = true
   # aws_region      = module.vpc.vpc_aws_region # need for helm only e4_lbc...
   # vpc_id          = module.vpc.vpc_vpc_id     # need for helm only e4_lbc...
   # aws_profile        = "dev"

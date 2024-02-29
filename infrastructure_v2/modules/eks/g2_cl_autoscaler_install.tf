@@ -1,7 +1,7 @@
 # Resource: Helm Release
 resource "helm_release" "cluster_autoscaler_release" {
   depends_on = [aws_iam_role.cluster_autoscaler_iam_role]
-  name       = "${aws_eks_cluster.eks_cluster.name}-ca" # "clas" # "${local.name}-ca"
+  name       = "this" #"${aws_eks_cluster.eks_cluster.name}-ca" # "clas" # "${local.name}-ca"
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
   namespace  = "kube-system"
@@ -32,7 +32,7 @@ resource "helm_release" "cluster_autoscaler_release" {
   # Additional Arguments (Optional) - To Test How to pass Extra Args for Cluster Autoscaler
   set {
     name  = "extraArgs.scan-interval"
-    value = "15s" # default is 10s
+    value = "20s" # default is 10s
   }
   set {
     name  = "extraArgs.balance-similar-node-groups"
