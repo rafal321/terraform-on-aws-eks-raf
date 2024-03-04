@@ -41,7 +41,7 @@ resource "aws_eks_node_group" "eks_ng_public" {
   tags = {
     # "k8s.io/cluster-autoscaler/enabled"               = "true"        # looks like these tags are on by default now
     # "k8s.io/cluster-autoscaler/${var.eks_cluster_id}" = "owned"       # looks like these tags are on by default now
-    lifecycle       = "spot"            # tags are not applied anyways!!!
+    lifecycle       = "spot" # tags are not applied anyways!!!
     network_type    = "public"
     ami_type        = var.ami_type
     lifecycle       = "spot"
@@ -59,4 +59,10 @@ resource "aws_autoscaling_group_tag" "this_public" {
     propagate_at_launch = true
   }
 }
+
+output "node_group_public_id" { value = aws_eks_node_group.eks_ng_public.id }
+output "node_group_public_arn" { value = aws_eks_node_group.eks_ng_public.arn }
+output "node_group_public_status" { value = aws_eks_node_group.eks_ng_public.status }
+output "node_group_public_version" { value = aws_eks_node_group.eks_ng_public.version }
+output "node_group_public_name" { value = aws_eks_node_group.eks_ng_public.node_group_name }
 */

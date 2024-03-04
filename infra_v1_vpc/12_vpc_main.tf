@@ -4,9 +4,9 @@
 ################################################################################
 
 module "vpc" {
-  source                  = "terraform-aws-modules/vpc/aws"
-  version                 = "~> 5.1.2"
-  
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 5.1.2"
+
   name                    = "${var.vpc_name}-vpc"
   cidr                    = "10.90.0.0/16"
   azs                     = ["${var.aws_region}a", "${var.aws_region}b"] #, "${var.aws_region}c"]
@@ -14,7 +14,7 @@ module "vpc" {
   private_subnets         = ["10.90.112.0/20", "10.90.128.0/20"]         #, "10.90.144.0/20"] #, "10.90.160.0/20", "10.90.176.0/20", "10.90.192.0/20"]
   database_subnets        = ["10.90.211.0/24", "10.90.212.0/24"]         #, "10.90.213.0/24"]
   intra_subnets           = ["10.90.221.0/24", "10.90.222.0/24"]         #, "10.90.223.0/24"]
-  enable_nat_gateway      = false                                        # false - for quick deploy
+  enable_nat_gateway      = true                                         # false - for quick deploy
   single_nat_gateway      = true
   enable_dns_hostnames    = true
   enable_dns_support      = true
@@ -32,8 +32,8 @@ module "vpc" {
     Workspace = terraform.workspace
     Test1     = "${var.vpc_name}-vpc"
     Test2     = var.aws_region
-    # Test3     = var.backend_s3
-  } 
+    Section = "infrastructure_v1"
+  }
 }
 ################################################################################
 # VPC Endpoints Module

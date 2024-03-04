@@ -33,7 +33,10 @@ resource "aws_eks_cluster" "eks_cluster" {
   }
 }
 
-output "endpoint" { value = aws_eks_cluster.eks_cluster.endpoint }
-output "kubeconfig-certificate-authority-data" { value = aws_eks_cluster.eks_cluster.certificate_authority[0].data }
-output "eks_cluster_name" { value = aws_eks_cluster.eks_cluster.id }
-output "eks_cluster_kubeconfig" { value = "aws eks update-kubeconfig --name ${aws_eks_cluster.eks_cluster.id}" }
+output "cluster_endpoint" { value = aws_eks_cluster.eks_cluster.endpoint }
+output "cluster_certificate_authority_data" { value = aws_eks_cluster.eks_cluster.certificate_authority[0].data }
+output "cluster_id" { value = aws_eks_cluster.eks_cluster.id }
+output "cluster_arn" { value = aws_eks_cluster.eks_cluster.arn }
+output "cluster_version" { value = aws_eks_cluster.eks_cluster.version }
+output "cluster_oidc_issuer_url" { value = aws_eks_cluster.eks_cluster.identity[0].oidc[0].issuer }
+output "cluster_update_kubeconfig" { value = "aws eks update-kubeconfig --name ${aws_eks_cluster.eks_cluster.id}" }

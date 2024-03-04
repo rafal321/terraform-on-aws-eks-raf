@@ -13,18 +13,19 @@ variable "aws_profile" {
 variable "cluster_name" {
   description = "Name of the EKS cluster. Also used as a prefix in names of related resources."
   type        = string
-  default     = "eksdemo"
+  default     = "eksraf"
 }
 variable "vpc_public_subnets" {
   description = "var.vpc_public_subnets"
   type        = list(any)
-  default     = ["subnet-0bacc9c593ff13155", "subnet-02f853e66452fed42"]
+  default     = [  "subnet-0cbaa0fa0efd51a9d","subnet-05a19967547cfa58d"]  
+  #default     = ["subnet-0bacc9c593ff13155", "subnet-02f853e66452fed42"]   # PUBLIC
 }
 
 variable "vpc_private_subnets" {
   description = "var.vpc_public_subnets"
   type        = list(any)
-  default     = ["subnet-0cb8bda3e81355ed9", "subnet-07c9eda6f79713ef1"]
+  default     = ["subnet-0012a3c459e28b881","subnet-09f4754c4d20120b2"] # PRIVATE
 }
 
 variable "cluster_service_ipv4_cidr" {
@@ -38,7 +39,7 @@ variable "cluster_service_ipv4_cidr" {
 variable "cluster_version" {
   description = "Kubernetes minor version to use for the EKS cluster (for example 1.21)"
   type        = string
-  default     = null # 1.28
+  default     =  "1.28"   # null # 1.28
 }
 variable "cluster_endpoint_private_access" {
   description = "Indicates whether or not the Amazon EKS private API server endpoint is enabled."

@@ -11,10 +11,10 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "863772705192-terraform.state"
-    key            = "development/eks-cluster/terraform.tfstate"
+    bucket         = "705192-terraform.state"
+    key            = "terraform-state/infrastructure-v2/terraform.tfstate"
     region         = "eu-west-1"
-    dynamodb_table = "development-ekscluster"
+    dynamodb_table = "infrastructure_v2_db"
     profile        = "dev"
   }
 }
@@ -87,7 +87,7 @@ output "eks_out" { value = module.eks }
 # Example: value = data.terraform_remote_state.eks.outputs.eks_out.eks_cluster_id  -> /home/ec2-user/terraform-on-aws-eks/13-EKS-IRSA/rk2-02-eks-irsa-demo-terraform-manifests/c2-remote-state-datasource.tf
 ########################################################################################
 ###### EKS Node Group Public - SPOT (resource) #########################################
-/*
+#/*
 module "eks_ng_public" {
   source             = "../modules/eks_ng_public/"
   eks_ng_public_name = "raf-1"
@@ -95,7 +95,7 @@ module "eks_ng_public" {
   #aws_profile        = "dev"
   vpc_public_subnets = module.vpc.vpc_public_subnets
   eks_cluster_id     = module.eks.eks_cluster_id
-  ami_type           = "BOTTLEROCKET_x86_64"  # "AL2_x86_64"
+  ami_type           = "AL2_x86_64" #"BOTTLEROCKET_x86_64"  # "AL2_x86_64"
   disk_size          = 25
   instance_types     = ["t3.medium", "t2.medium", "t3a.medium"]
   min_size           = 2
@@ -103,10 +103,10 @@ module "eks_ng_public" {
   max_size           = 8
 }
 output "eks_ng_public_out" { value = module.eks_ng_public }
-*/
+#*/
 ########################################################################################
 ###### EKS Node Group Private - SPOT (resource) ########################################
-#/*
+/*
 module "eks_ng_private" {
   source              = "../modules/eks_ng_private/"
   eks_ng_private_name = "raf-21"
@@ -122,7 +122,7 @@ module "eks_ng_private" {
   max_size            = 10
 }
 output "eks_ng_private_out" { value = module.eks_ng_private }
-#*/
+*/
 ########################################################################################
 ###### RDS for MySQL  (resource) #######################################################
 /*

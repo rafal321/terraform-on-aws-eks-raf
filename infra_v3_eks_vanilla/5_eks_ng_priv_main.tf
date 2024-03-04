@@ -1,5 +1,5 @@
 # Resource: aws_eks_node_group
-
+#/*
 resource "aws_eks_node_group" "eks_ng_private" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "${var.cluster_name}-eks-ng-private"
@@ -41,7 +41,7 @@ resource "aws_eks_node_group" "eks_ng_private" {
   tags = {
     # "k8s.io/cluster-autoscaler/enabled"               = "true"        # looks like these tags are on by default now
     # "k8s.io/cluster-autoscaler/${var.eks_cluster_id}" = "owned"       # looks like these tags are on by default now
-    lifecycle       = "spot"                    # tags are not applied anyways!!!
+    lifecycle       = "spot" # tags are not applied anyways!!!
     network_type    = "private"
     ami_type        = var.ami_type
     lifecycle       = "spot"
@@ -59,3 +59,10 @@ resource "aws_autoscaling_group_tag" "this_private" {
     propagate_at_launch = true
   }
 }
+
+output "node_group_private_id" { value = aws_eks_node_group.eks_ng_private.id }
+output "node_group_private_arn" { value = aws_eks_node_group.eks_ng_private.arn }
+output "node_group_private_status" { value = aws_eks_node_group.eks_ng_private.status }
+output "node_group_private_version" { value = aws_eks_node_group.eks_ng_private.version }
+output "node_group_private_name" { value = aws_eks_node_group.eks_ng_private.node_group_name }
+#*/
