@@ -1,0 +1,31 @@
+cat <<EOF > z_dynamodb_schema.json
+{
+  "AttributeDefinitions": [
+    {
+      "AttributeName": "LockID",
+      "AttributeType": "S"
+    }
+  ],
+  "TableName": "infra_v4_eks_complete",
+  "KeySchema": [
+    {
+      "AttributeName": "LockID",
+      "KeyType": "HASH"
+    }
+  ],
+  "ProvisionedThroughput": {
+    "ReadCapacityUnits": 1,
+    "WriteCapacityUnits": 1
+  },
+  "DeletionProtectionEnabled": false
+}
+EOF
+-------------------------------------------------
+aws dynamodb create-table --cli-input-json file://z_dynamodb_schema.json --profile XXX
+-------------------------------------------------
+aws dynamodb delete-table --table-name vpc-terraform-state --profile XXX
+-------------------------------------------------
+aws dynamodb list-tables --profile XXX
+-------------------------------------------------
+aws dynamodb describe-table --table-name vpc-terraform-state --profile XXX
+-------------------------------------------------
