@@ -1,1 +1,0 @@
-https://github.com/stacksimplify/terraform-on-aws-eks/tree/main/10-Kubernetes-Deployment-and-Service/kube-manifests
