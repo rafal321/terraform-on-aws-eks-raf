@@ -8,12 +8,12 @@ variable "aws_profile" {
   type        = string
   default     = "dev"
 }
-
+#--------------------------------------------------------
 # EKS Cluster Input Variables
 variable "cluster_name" {
   description = "Name of the EKS cluster. Also used as a prefix in names of related resources."
   type        = string
-  default     = "eksraf2"
+  default     = "eksraf3"
 }
 variable "vpc_public_subnets" {
   description = "var.vpc_public_subnets"
@@ -59,11 +59,16 @@ variable "cluster_endpoint_public_access_cidrs" {
   default     = ["0.0.0.0/0"]
 }
 #--------------------------------------------------------
-# cluster addons
+# cluster addons  -->list all addons:     aws eks list-addons --cluster XXX
 variable "enable_ebs_eks_addon" {
   description = "If set to true, enable ebs_eks_addon"
   type        = bool
-  default     = true
+  default     = false
+}
+variable "lbc_image_repo" {
+  description = "https://docs.aws.amazon.com/eks/latest/userguide/add-ons-images.html"
+  type        = string
+  default     = "602401143452.dkr.ecr.eu-west-1.amazonaws.com/amazon/aws-load-balancer-controller"
 }
 
 #--------------------------------------------------------

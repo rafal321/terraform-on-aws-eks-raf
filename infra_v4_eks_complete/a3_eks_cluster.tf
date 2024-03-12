@@ -13,6 +13,9 @@ resource "aws_eks_cluster" "eks_cluster" {
     endpoint_public_access  = var.cluster_endpoint_public_access       # Default true
     public_access_cidrs     = var.cluster_endpoint_public_access_cidrs # ["10.30.0.0/16", "109.255.232.193/32"] who can access it on public internet
   }
+  # access_config {
+  #   authentication_mode = "CONFIG_MAP" # "API_AND_CONFIG_MAP"   "API"
+  # }
 
   kubernetes_network_config {
     service_ipv4_cidr = var.cluster_service_ipv4_cidr

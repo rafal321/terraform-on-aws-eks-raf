@@ -1,0 +1,2 @@
+this requires insalling external dns
+30-EKS-ExternalDNS-Install

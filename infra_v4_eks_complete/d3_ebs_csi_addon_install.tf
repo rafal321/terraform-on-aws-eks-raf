@@ -24,17 +24,17 @@ aws eks list-addons --cluster-name raf-eks-cluster
 output "ebs_csi_addon_arn" {
   depends_on  = [aws_eks_addon.ebs_eks_addon]
   description = "EKS AddOn - EBS CSI Driver ARN"
-  value       = aws_eks_addon.ebs_eks_addon[0].service_account_role_arn
+  value       = var.enable_ebs_eks_addon ? aws_eks_addon.ebs_eks_addon[0].service_account_role_arn : null
 }
 output "ebs_csi_addon_version" {
   depends_on  = [aws_eks_addon.ebs_eks_addon]
   description = "EKS AddOn - Version"
-  value       = aws_eks_addon.ebs_eks_addon[0].addon_version
+  value       = var.enable_ebs_eks_addon ? aws_eks_addon.ebs_eks_addon[0].addon_version : null
 }
 output "ebs_csi_addon_name" {
   depends_on  = [aws_eks_addon.ebs_eks_addon]
   description = "EKS AddOn - Version"
-  value       = aws_eks_addon.ebs_eks_addon[0].addon_name
+  value       = var.enable_ebs_eks_addon ? aws_eks_addon.ebs_eks_addon[0].addon_name : null
 }
 
 # example 

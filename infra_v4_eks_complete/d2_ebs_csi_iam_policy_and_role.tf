@@ -3,7 +3,7 @@
 
 # Resource: Create EBS CSI IAM Policy
 resource "aws_iam_policy" "ebs_csi_iam_policy" {
-  name        = "${var.cluster_name}-EKS_EBS_CSI_Driver_Policy" # NEXT TimeRENAME : AmazonEKS_EBS_CSI_DriverPolicy
+  name        = "${var.cluster_name}-AmazonEKS_EBS_CSI_DriverPolicy" # NEXT TimeRENAME : AmazonEKS_EBS_CSI_DriverPolicy
   path        = "/"
   description = "EBS CSI IAM Policy"
   #policy = data.http.ebs_csi_iam_policy.body
@@ -16,7 +16,7 @@ output "ebs_csi_iam_policy_arn" {
 
 # Resource: Create IAM Role and associate the EBS IAM Policy to it
 resource "aws_iam_role" "ebs_csi_iam_role" {
-  name        = "${var.cluster_name}-ebs-csi-iam-role" # NEXT TimeRENAME : AmazonEKS_EBS_CSI_DriverRole
+  name        = "${var.cluster_name}-AmazonEKS_EBS_CSI_DriverRole" # NEXT TimeRENAME : AmazonEKS_EBS_CSI_DriverRole
   description = "EBS CSI IAM Role"
   # [Trust Relationship | Trust Policy] Terraform's "jsonencode" function converts a Terraform expression result to valid JSON syntax.
   assume_role_policy = jsonencode({
