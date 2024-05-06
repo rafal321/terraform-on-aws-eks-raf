@@ -18,14 +18,14 @@ variable "cluster_name" {
 variable "vpc_public_subnets" {
   description = "var.vpc_public_subnets"
   type        = list(any)
-  default     = ["subnet-0cbaa0fa0efd51a9d", "subnet-05a19967547cfa58d"]
+  default     = ["subnet-065bbe84209952bd7","subnet-064fd1bb72a79dc67"]
   #default     = ["subnet-0bacc9c593ff13155", "subnet-02f853e66452fed42"]   # PUBLIC
 }
 
 variable "vpc_private_subnets" {
   description = "var.vpc_public_subnets"
   type        = list(any)
-  default     = ["subnet-0012a3c459e28b881", "subnet-09f4754c4d20120b2"] # PRIVATE
+  default     = ["subnet-06bd5fa89fee1702f", "subnet-00a3e1c8e494888cf"] # PRIVATE
 }
 
 variable "cluster_service_ipv4_cidr" {
