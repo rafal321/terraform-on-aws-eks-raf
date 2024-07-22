@@ -1,18 +1,14 @@
 #data.terraform_remote_state.eks.outputs.aws_iam_openid_connect_provider_arn
 #data.terraform_remote_state.eks.outputs.aws_iam_openid_connect_provider_extract_from_arn
 
-# Resource: Create EBS CSI IAM Policy
-resource "aws_iam_policy" "ebs_csi_iam_policy" {
-  name        = "${var.cluster_name}-AmazonEKS_EBS_CSI_DriverPolicy" # NEXT TimeRENAME : AmazonEKS_EBS_CSI_DriverPolicy
-  path        = "/"
-  description = "EBS CSI IAM Policy"
-  #policy = data.http.ebs_csi_iam_policy.body
-  policy = data.http.ebs_csi_iam_policy.response_body
-}
-
-output "ebs_csi_iam_policy_arn" {
-  value = aws_iam_policy.ebs_csi_iam_policy.arn
-}
+# # Resource: Create EBS CSI IAM Policy
+# resource "aws_iam_policy" "ebs_csi_iam_policy" {
+#   name        = "${var.cluster_name}-AmazonEKS_EBS_CSI_DriverPolicy" # NEXT TimeRENAME : AmazonEKS_EBS_CSI_DriverPolicy
+#   path        = "/"
+#   description = "EBS CSI IAM Policy"
+#   #policy = data.http.ebs_csi_iam_policy.body
+#   policy = data.http.ebs_csi_iam_policy.response_body
+# }
 
 # Resource: Create IAM Role and associate the EBS IAM Policy to it
 resource "aws_iam_role" "ebs_csi_iam_role" {
@@ -44,7 +40,8 @@ resource "aws_iam_role" "ebs_csi_iam_role" {
 }
 # Associate EBS CSI IAM Policy to EBS CSI IAM Role
 resource "aws_iam_role_policy_attachment" "ebs_csi_iam_role_policy_attach" {
-  policy_arn = aws_iam_policy.ebs_csi_iam_policy.arn
+  # policy_arn = aws_iam_policy.ebs_csi_iam_policy.arn
+  policy_arn = data.aws_iam_policy.ebs_csi_driver_policy.arn
   role       = aws_iam_role.ebs_csi_iam_role.name
 }
 

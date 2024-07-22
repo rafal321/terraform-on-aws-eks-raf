@@ -2,10 +2,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-ssl-demo
+  name: fargate-profile-demo
+  namespace: fp-ns-app1
   annotations:
     # Load Balancer Name
-    alb.ingress.kubernetes.io/load-balancer-name: ingress-ssl-demo
+    alb.ingress.kubernetes.io/load-balancer-name: fargate-profile-demo
     # Ingress Core Settings
     #kubernetes.io/ingress.class: "alb" (OLD INGRESS CLASS NOTATION - STILL WORKS BUT RECOMMENDED TO USE IngressClass Resource)
     alb.ingress.kubernetes.io/scheme: internet-facing
@@ -20,32 +21,41 @@ metadata:
     alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'   
     ## SSL Settings
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
-    alb.ingress.kubernetes.io/certificate-arn: 'arn:aws:acm:eu-west-1:_ACC_NO_:certificate/a5c94c17-0abe-4184-a3c2-08145ed44989'
+    #alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:180789647333:certificate/d86de939-8ffd-410f-adce-0ce1f5be6e0d
     #alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-1-2017-01 #Optional (Picks default if not used)    
     # SSL Redirect Setting
-    alb.ingress.kubernetes.io/ssl-redirect: '443'      
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    # External DNS - For creating a Record Set in Route53
+    external-dns.alpha.kubernetes.io/hostname: fargate-profile-demo-502.ops.perf.hosting.com 
+    # Target Type: IP (Defaults to Instance if not specified) Has to be IP for Fargate
+    alb.ingress.kubernetes.io/target-type: ip    
 spec:
-# ingressClassName: my-aws-ingress-class   # Ingress Class - not required as it is default
+  # ingressClassName: my-aws-ingress-class   # Ingress Class                  
   defaultBackend:
     service:
-      name: app3-nginx-nodeport-service
+      name: app3-nginx-clusterip-service
       port:
         number: 80     
+  tls:
+  - hosts:
+    - "*.ops.perf.hosting.com"
   rules:
     - http:
-        paths:      
+        paths:
           - path: /app1
             pathType: Prefix
             backend:
               service:
-                name: app1-nginx-nodeport-service
+                name: app1-nginx-clusterip-service
                 port: 
                   number: 80
+    - http:
+        paths:                  
           - path: /app2
             pathType: Prefix
             backend:
               service:
-                name: app2-nginx-nodeport-service
+                name: app2-nginx-clusterip-service
                 port: 
                   number: 80
 
@@ -53,5 +63,8 @@ spec:
                         
 # 1. If  "spec.ingressClassName: my-aws-ingress-class" not specified, will reference default ingress class on this kubernetes cluster
 # 2. Default Ingress class is nothing but for which ingress class we have the annotation `ingressclass.kubernetes.io/is-default-class: "true"`
-      
+
+# https://fargate-profile-demo-502.ops.perf.hosting.com/
+# https://fargate-profile-demo-502.ops.perf.hosting.com/app1/index.html
+# https://fargate-profile-demo-502.ops.perf.hosting.com/app2/index.html
     

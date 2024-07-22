@@ -25,7 +25,7 @@ metadata:
     # SSL Redirect Setting
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     # External DNS - For creating a Record Set in Route53
-    external-dns.alpha.kubernetes.io/hostname: certdiscovery-tls-102.opsdevops.test.hosting.com
+    external-dns.alpha.kubernetes.io/hostname: certdiscovery-tls-102.ops.perf.hosting.com
 spec:
 # ingressClassName: my-aws-ingress-class   # Ingress Class                  
   defaultBackend:
@@ -36,7 +36,7 @@ spec:
   # SSL Certificate Discovery using TLS        
   tls:
   - hosts:
-    - "*.opsdevops.test.hosting.com"
+    - "*.ops.perf.hosting.com"
   rules:
     - http:
         paths:

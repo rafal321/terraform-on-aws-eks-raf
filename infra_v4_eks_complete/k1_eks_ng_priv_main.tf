@@ -1,11 +1,11 @@
 # Resource: aws_eks_node_group
-#/*
+/*
 resource "aws_eks_node_group" "eks_ng_private" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "${var.cluster_name}-eks-ng-private"
   node_role_arn   = aws_iam_role.eks_nodegroup_role.arn
   subnet_ids      = var.vpc_private_subnets
-#  version = "1.29"                      # RAF: use for upgrade only
+  #  version = "1.29"                      # RAF: use for upgrade only
 
   ami_type       = var.ami_type # "AL2_x86_64"
   capacity_type  = "SPOT"
@@ -16,6 +16,10 @@ resource "aws_eks_node_group" "eks_ng_private" {
     desired_size = var.desired_size
     min_size     = var.min_size
     max_size     = var.max_size
+  }
+  lifecycle {
+    ignore_changes = [scaling_config[0].desired_size]
+    # Explained: Cluster Autoscaler Tutorial (EKS Pod Identities): AWS EKS Kubernetes Tutorial - Part 5 - managed by autoscaler
   }
 
   # Desired max percentage of unavailable worker nodes during node group update.
@@ -65,4 +69,4 @@ output "node_group_private_arn" { value = aws_eks_node_group.eks_ng_private.arn 
 output "node_group_private_status" { value = aws_eks_node_group.eks_ng_private.status }
 output "node_group_private_version" { value = aws_eks_node_group.eks_ng_private.version }
 output "node_group_private_name" { value = aws_eks_node_group.eks_ng_private.node_group_name }
-#*/
+*/

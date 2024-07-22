@@ -1,0 +1,15 @@
+I'm getting this error
+Warning  FailedBuildModel  2m10s (x16 over 4m54s)  ingress  Failed build model due to ingress: fp-ns-app1/fargate-profile-demo: no certificate found for host: *.opsdevops.test.hosting.com
+
+  xin cleanup related
+
+Raf need to fix DNS
+
+Seems to be ok just
+address was wrong it seems
+external-dns.alpha.kubernetes.io/hostname: nlbdns101.opsdevops.test.hosting.com
+open
+jaw
+hosting
+commercial
+division

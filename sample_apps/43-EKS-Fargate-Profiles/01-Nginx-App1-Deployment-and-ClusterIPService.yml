@@ -4,8 +4,9 @@ metadata:
   name: app1-nginx-deployment
   labels:
     app: app1-nginx
+  namespace: fp-ns-app1    
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: app1-nginx
@@ -26,6 +27,7 @@ metadata:
   name: app1-nginx-clusterip-service
   labels:
     app: app1-nginx
+  namespace: fp-ns-app1    
   annotations:
 #Important Note:  Need to add health check path annotations in service level if we are planning to use multiple targets in a load balancer    
     alb.ingress.kubernetes.io/healthcheck-path: /app1/index.html
@@ -36,3 +38,4 @@ spec:
   ports:
     - port: 80
       targetPort: 80
+

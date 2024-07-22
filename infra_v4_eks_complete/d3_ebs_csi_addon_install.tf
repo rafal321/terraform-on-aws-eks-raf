@@ -1,6 +1,4 @@
 
-
-
 resource "aws_eks_addon" "ebs_eks_addon" {
   count = var.enable_ebs_eks_addon ? 1 : 0
   depends_on = [

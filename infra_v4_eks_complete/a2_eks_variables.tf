@@ -6,26 +6,25 @@ variable "aws_region" {
 variable "aws_profile" {
   description = "var.aws_profile"
   type        = string
-  default     = "dev"
+  default     = "lab"
 }
 #--------------------------------------------------------
 # EKS Cluster Input Variables
 variable "cluster_name" {
   description = "Name of the EKS cluster. Also used as a prefix in names of related resources."
   type        = string
-  default     = "eksraf3"
+  default     = "ekslab01"
 }
 variable "vpc_public_subnets" {
   description = "var.vpc_public_subnets"
   type        = list(any)
-  default     = ["subnet-065bbe84209952bd7","subnet-064fd1bb72a79dc67"]
-  #default     = ["subnet-0bacc9c593ff13155", "subnet-02f853e66452fed42"]   # PUBLIC
+  default     = ["subnet-0e325118b5eed09ea", "subnet-04a4b5654d58a32e1"] # PUBLIC
 }
 
 variable "vpc_private_subnets" {
-  description = "var.vpc_public_subnets"
+  description = "var.vpc_private_subnets"
   type        = list(any)
-  default     = ["subnet-06bd5fa89fee1702f", "subnet-00a3e1c8e494888cf"] # PRIVATE
+  default     = ["subnet-0d5470217e38223f0", "subnet-0ea99efb622eec153"] # PRIVATE
 }
 
 variable "cluster_service_ipv4_cidr" {
@@ -82,7 +81,7 @@ variable "ami_type" {
 variable "disk_size" {
   description = "var.eks_cluster_id"
   type        = number
-  default     = 25
+  default     = 20
 }
 variable "instance_types" {
   description = "var.eks_cluster_id"

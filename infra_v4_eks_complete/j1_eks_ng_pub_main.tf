@@ -1,5 +1,5 @@
 # Resource: aws_eks_node_group
-/*
+#/*
 resource "aws_eks_node_group" "eks_ng_public" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
   node_group_name = "${var.cluster_name}-eks-ng-public"
@@ -16,6 +16,10 @@ resource "aws_eks_node_group" "eks_ng_public" {
     desired_size = var.desired_size
     min_size     = var.min_size
     max_size     = var.max_size
+  }
+  lifecycle {
+    ignore_changes = [scaling_config[0].desired_size]
+    # Explained: Cluster Autoscaler Tutorial (EKS Pod Identities): AWS EKS Kubernetes Tutorial - Part 5 - managed by autoscaler
   }
 
   # Desired max percentage of unavailable worker nodes during node group update.
@@ -65,4 +69,4 @@ output "node_group_public_arn" { value = aws_eks_node_group.eks_ng_public.arn }
 output "node_group_public_status" { value = aws_eks_node_group.eks_ng_public.status }
 output "node_group_public_version" { value = aws_eks_node_group.eks_ng_public.version }
 output "node_group_public_name" { value = aws_eks_node_group.eks_ng_public.node_group_name }
-*/
+# */
