@@ -1,3 +1,4 @@
+# 1 trust policy to grant premissions
 data "aws_iam_policy_document" "ebs_csi_driver" {
   statement {
     effect = "Allow"
@@ -8,17 +9,16 @@ data "aws_iam_policy_document" "ebs_csi_driver" {
     actions = ["sts:AssumeRole", "sts:TagSession"]
   }
 }
-
+# 2 create role using this policy
 resource "aws_iam_role" "ebs_csi_driver" {
   name               = "${aws_eks_cluster.eks.name}-ebs-csi-driver"
   assume_role_policy = data.aws_iam_policy_document.ebs_csi_driver.json
 }
-
+# 3 attach managed policy to grant premissions
 resource "aws_iam_role_policy_attachment" "ebs_csi_driver" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
   role       = aws_iam_role.ebs_csi_driver.name
 }
-
 # Optional: only if you want to encrypt the EBS drives
 resource "aws_iam_policy" "ebs_csi_driver_encryption" {
   name = "${aws_eks_cluster.eks.name}-ebs-csi-driver-encryption"
@@ -39,13 +39,14 @@ resource "aws_iam_policy" "ebs_csi_driver_encryption" {
   })
 }
 
-# Optional: only if you want to encrypt the EBS drives
+# we attach the policy to the role
 resource "aws_iam_role_policy_attachment" "ebs_csi_driver_encryption" {
   policy_arn = aws_iam_policy.ebs_csi_driver_encryption.arn
   role       = aws_iam_role.ebs_csi_driver.name
 }
 
 resource "aws_eks_pod_identity_association" "ebs_csi_driver" {
+  depends_on = [ aws_eks_node_group.eks_ng_private ]          # CHECK NEXTT TIME
   cluster_name    = aws_eks_cluster.eks.name
   namespace       = "kube-system"
   service_account = "ebs-csi-controller-sa"
@@ -53,6 +54,7 @@ resource "aws_eks_pod_identity_association" "ebs_csi_driver" {
 }
 
 resource "aws_eks_addon" "ebs_csi_driver" {
+  depends_on = [ aws_eks_node_group.eks_ng_private ]          # CHECK NEXTT TIME
   cluster_name             = aws_eks_cluster.eks.name
   addon_name               = "aws-ebs-csi-driver"
   addon_version            = "v1.30.0-eksbuild.1"
