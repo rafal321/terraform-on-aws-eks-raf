@@ -29,7 +29,8 @@ spec:
         name: data
       spec:
         accessModes: [ReadWriteOnce]
+        storageClassName: gp3-exp
         resources:
           requests:
-            storage: 8Gi
+            storage: 12Gi
 

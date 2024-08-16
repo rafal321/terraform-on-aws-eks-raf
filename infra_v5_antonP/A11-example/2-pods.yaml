@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: myapp-1
+  name: myapp-111-xx
   namespace: 11-example
 spec:
   containers:
@@ -12,11 +12,11 @@ spec:
       args:
         [
           "-c",
-          "while true; do echo $(date -u) >> /data/out1.txt; sleep 5; done",
+          "while true; do echo $(date -u) >> /data-x/out1A.txt; sleep 300; done",
         ]
       volumeMounts:
         - name: persistent-storage
-          mountPath: /data
+          mountPath: /data-x
   volumes:
     - name: persistent-storage
       persistentVolumeClaim:
@@ -25,7 +25,7 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: myapp-2
+  name: myapp-222-xx
   namespace: 11-example
 spec:
   containers:
@@ -35,13 +35,14 @@ spec:
       args:
         [
           "-c",
-          "while true; do echo $(date -u) >> /data/out1.txt; sleep 5; done",
+          "while true; do echo $(date -u) >> /data-x/out1A.txt; sleep 300; done",
         ]
       volumeMounts:
         - name: persistent-storage
-          mountPath: /data
+          mountPath: /data-x
   volumes:
     - name: persistent-storage
       persistentVolumeClaim:
         claimName: myapp
 
+# kubectl -n 11-example get pvc|c

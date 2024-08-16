@@ -39,7 +39,7 @@ resource "aws_eks_node_group" "eks_ng_private" {
   node_role_arn   = aws_iam_role.nodes.arn
   subnet_ids      = local.subnets_pri
 
-  ami_type       = "BOTTLEROCKET_x86_64"
+  ami_type       = "AL2_x86_64" #"BOTTLEROCKET_x86_64"
   capacity_type  = "SPOT"
   disk_size      = 20
   instance_types = ["t3.large", "t2.large", "r5.large"]

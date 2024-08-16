@@ -1,0 +1,30 @@
+# StorageClass - see putra EKS CSI Driver Tutorial (ReadWriteOnce): AWS EKS Kubernetes Tutorial - Part 8
+# raf I created this
+# kubectl get storageclasses.storage.k8s.io |c
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp3-exp
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  fsType: ext4
+  type: gp3
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+
+
+# you can reference it like this:
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: mongo-pv
+# spec:
+#   capacity:
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   storageClassName: gp3  <<-----
+
+# EBS can be used with ReadWriteOnce (one Pod/Node)
+# for statefull sets and pod afinity properly configured

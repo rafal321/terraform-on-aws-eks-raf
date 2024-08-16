@@ -46,7 +46,7 @@ resource "aws_iam_role_policy_attachment" "ebs_csi_driver_encryption" {
 }
 
 resource "aws_eks_pod_identity_association" "ebs_csi_driver" {
-  depends_on = [ aws_eks_node_group.eks_ng_private ]          # CHECK NEXTT TIME
+  depends_on      = [aws_eks_node_group.eks_ng_private] # CHECK NEXTT TIME
   cluster_name    = aws_eks_cluster.eks.name
   namespace       = "kube-system"
   service_account = "ebs-csi-controller-sa"
@@ -54,7 +54,7 @@ resource "aws_eks_pod_identity_association" "ebs_csi_driver" {
 }
 
 resource "aws_eks_addon" "ebs_csi_driver" {
-  depends_on = [ aws_eks_node_group.eks_ng_private ]          # CHECK NEXTT TIME
+  depends_on               = [aws_eks_node_group.eks_ng_private] # CHECK NEXTT TIME
   cluster_name             = aws_eks_cluster.eks.name
   addon_name               = "aws-ebs-csi-driver"
   addon_version            = "v1.30.0-eksbuild.1"

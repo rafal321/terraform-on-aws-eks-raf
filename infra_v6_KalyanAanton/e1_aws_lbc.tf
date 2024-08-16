@@ -61,6 +61,6 @@ resource "helm_release" "aws_lbc" {
 
 # output "zzzz" {#   value = data.aws_iam_policy_document.aws_lbc}
 output "lbc_helm_metadata" {
- value       = "${helm_release.aws_lbc.name} - ver: ${helm_release.aws_lbc.version}"
+  value = "${helm_release.aws_lbc.name} - ver: ${helm_release.aws_lbc.version}"
   #value       = helm_release.aws_lbc.metadata
 }
