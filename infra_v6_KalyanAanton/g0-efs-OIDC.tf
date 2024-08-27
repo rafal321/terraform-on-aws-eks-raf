@@ -1,3 +1,4 @@
+#/*
 # # this is all we need to configure this provider
 
 # 1 extract certificate from eks cluster
@@ -17,3 +18,4 @@ resource "aws_iam_openid_connect_provider" "eks" {
 
 #output "zz1" {  value = data.tls_certificate.eks}
 #output "zz2" {  value = aws_iam_openid_connect_provider.eks}
+#*/

@@ -1,3 +1,4 @@
+/*
 # 1 trust policy to grant premissions
 data "aws_iam_policy_document" "ebs_csi_driver" {
   statement {
@@ -61,3 +62,5 @@ resource "aws_eks_addon" "ebs_csi_driver" {
   service_account_role_arn = aws_iam_role.ebs_csi_driver.arn
 }
 # aws eks describe-addon-versions --profile lab --addon-name aws-ebs-csi-driver | grep addonVersion
+
+*/

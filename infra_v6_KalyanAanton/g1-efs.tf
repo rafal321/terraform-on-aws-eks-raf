@@ -1,3 +1,5 @@
+#/*
+
 # EKS EFS CSI Driver Tutorial (ReadWriteMany) & OIDC: AWS EKS Kubernetes Tutorial - Part 9
 # efs-csi driver doesn't support eks pod identity so we need 
 #      [1] attach all premissions to kubernetes nodes
@@ -77,6 +79,7 @@ resource "helm_release" "efs_csi_driver" {
     value = aws_iam_role.efs_csi_driver.arn
   }
   depends_on = [
+    aws_eks_node_group.eks_ng_private,
     aws_efs_mount_target.zone_a,
     aws_efs_mount_target.zone_b
   ]
@@ -111,6 +114,7 @@ resource "kubernetes_storage_class_v1" "efs" {
 
 # ----------------------------------------
 # raf created based on: terraform-on-aws-eks-raf/infra_v5_antonP/A10-example
+# this is causing issues if run during creation
 resource "kubernetes_storage_class_v1" "ebs" {
   metadata {
     name = "gp3-exp"
@@ -129,3 +133,4 @@ resource "kubernetes_storage_class_v1" "ebs" {
 
 
 
+#*/

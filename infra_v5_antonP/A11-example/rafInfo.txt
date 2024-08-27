@@ -1,0 +1,2 @@
+EKS EFS CSI Driver Tutorial (ReadWriteMany) & OIDC: AWS EKS Kubernetes Tutorial - Part 9
+https://www.youtube.com/watch?v=Yequ94ZzN6U&list=PLiMWaCMwGJXnKY6XmeifEpjIfkWRo9v2l&index=10

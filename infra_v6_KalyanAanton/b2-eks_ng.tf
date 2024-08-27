@@ -61,6 +61,11 @@ resource "aws_eks_node_group" "eks_ng_private" {
     aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
     aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly
   ]
+    timeouts {
+    create = "15m"
+    update = "15m"
+    delete = "15m"
+  }
   labels = {
     role            = "general"
     lifecycle       = "spot"

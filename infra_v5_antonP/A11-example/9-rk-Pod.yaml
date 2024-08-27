@@ -1,0 +1,49 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rk-pod55
+  namespace: 11-example
+spec:
+  containers:
+    - name: myapp-1
+      image: busybox
+      command: ["/bin/sh"]
+      args:
+        [
+          "-c",
+          "while true; do echo $(date -u) >> /data-x55/out1A55.txt; sleep 300; done",
+        ]
+      volumeMounts:
+        - name: persistent-storage55
+          mountPath: /data-x55
+  volumes:
+    - name: persistent-storage55
+      persistentVolumeClaim:
+        claimName: myapp55
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rk-pod66
+  namespace: 11-example
+spec:
+  containers:
+    - name: myapp-1
+      image: busybox
+      command: ["/bin/sh"]
+      args:
+        [
+          "-c",
+          "while true; do echo $(date -u) >> /data-x55/out1A55.txt; sleep 300; done",
+        ]
+      volumeMounts:
+        - name: persistent-storage66
+          mountPath: /data-x66
+  volumes:
+    - name: persistent-storage66
+      persistentVolumeClaim:
+        claimName: myapp55
+
+
