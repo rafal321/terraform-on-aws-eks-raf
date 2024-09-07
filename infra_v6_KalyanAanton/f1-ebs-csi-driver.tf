@@ -1,4 +1,4 @@
-/*
+# /*
 # 1 trust policy to grant premissions
 data "aws_iam_policy_document" "ebs_csi_driver" {
   statement {
@@ -58,9 +58,9 @@ resource "aws_eks_addon" "ebs_csi_driver" {
   depends_on               = [aws_eks_node_group.eks_ng_private] # CHECK NEXTT TIME
   cluster_name             = aws_eks_cluster.eks.name
   addon_name               = "aws-ebs-csi-driver"
-  addon_version            = "v1.30.0-eksbuild.1"
+  addon_version            = "v1.33.0-eksbuild.1"
   service_account_role_arn = aws_iam_role.ebs_csi_driver.arn
 }
 # aws eks describe-addon-versions --profile lab --addon-name aws-ebs-csi-driver | grep addonVersion
 
-*/
+#*/

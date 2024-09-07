@@ -34,3 +34,5 @@ spec:
           requests:
             storage: 12Gi
 
+# kubectl get sc |c
+
