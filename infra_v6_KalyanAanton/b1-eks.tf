@@ -29,7 +29,7 @@ resource "aws_iam_role_policy_attachment" "EKSVPCResourceController" {
 
 resource "aws_eks_cluster" "eks" {
   name     = "${local.env}-${local.eks_name}"
-  version  = local.eks_version
+  version  = local.eks_ver
   role_arn = aws_iam_role.eks.arn
   vpc_config {
     endpoint_private_access = false

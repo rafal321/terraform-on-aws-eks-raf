@@ -34,7 +34,7 @@ resource "aws_iam_role_policy_attachment" "AmazonEC2RoleforSSM" {
 # --- NODES PRIVATE -------------------------------------------------------------------------
 resource "aws_eks_node_group" "eks_ng_private" {
   cluster_name    = aws_eks_cluster.eks.name
-  version         = local.eks_version
+  version         = local.eks_ver_ng
   node_group_name = "${local.eks_name}-ng-private"
   node_role_arn   = aws_iam_role.nodes.arn
   subnet_ids      = local.subnets_pri
@@ -42,12 +42,12 @@ resource "aws_eks_node_group" "eks_ng_private" {
   ami_type       = "AL2_x86_64" #"BOTTLEROCKET_x86_64"
   capacity_type  = "SPOT"
   disk_size      = 20
-  instance_types = ["t3.large", "t2.large", "r5.large"]
+  instance_types = ["t3.large", "t2.large", "r5.large", "r6a.large"] # "r6a.large"
 
   scaling_config {
     desired_size = 2
     min_size     = 2
-    max_size     = 8
+    max_size     = 9
   }
   # Explained: Cluster Autoscaler Tutorial (EKS Pod Identities): AWS EKS Kubernetes Tutorial - Part 5
   lifecycle { ignore_changes = [scaling_config[0].desired_size] }
@@ -61,9 +61,9 @@ resource "aws_eks_node_group" "eks_ng_private" {
     aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
     aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly
   ]
-    timeouts {
+  timeouts {
     create = "15m"
-    update = "15m"
+    update = "25m"
     delete = "15m"
   }
   labels = {
@@ -98,7 +98,7 @@ output "ng_pri_name" { value = aws_eks_node_group.eks_ng_private.node_group_name
 # --- NODES PUBLIC -------------------------------------------------------------------------
 # resource "aws_eks_node_group" "eks_ng_public" {
 #   cluster_name    = aws_eks_cluster.eks.name
-#   version         = local.eks_version
+#   version         = local.eks_ver_ng
 #   node_group_name = "${local.eks_name}-ng-public"
 #   node_role_arn   = aws_iam_role.nodes.arn
 #   subnet_ids      = local.subnets_pub
