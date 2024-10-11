@@ -25,7 +25,7 @@ metadata:
     # SSL Redirect Setting
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     # External DNS - For creating a Record Set in Route53
-    external-dns.alpha.kubernetes.io/hostname: default101.opsdevops.test.hosting.com
+    external-dns.alpha.kubernetes.io/hostname: default101.ops.perf.hosting.com
 spec:
 # ingressClassName: my-aws-ingress-class   # Ingress Class                  
   defaultBackend:
@@ -34,7 +34,7 @@ spec:
       port:
         number: 80     
   rules:
-    - host: app101.opsdevops.test.hosting.com
+    - host: app101.ops.perf.hosting.com
       http:
         paths:
           - path: /
@@ -44,7 +44,7 @@ spec:
                 name: app1-nginx-nodeport-service
                 port: 
                   number: 80
-    - host: app201.opsdevops.test.hosting.com
+    - host: app201.ops.perf.hosting.com
       http:
         paths:                  
           - path: /
@@ -57,7 +57,11 @@ spec:
 
 # Important Note-1: In path based routing order is very important, if we are going to use  "/*", try to use it at the end of all rules.                                        
                         
-# 1. If  "spec.ingressClassName: my-aws-ingress-class" not specified, will reference default ingress class on this kubernetes cluster
-# 2. Default Ingress class is nothing but for which ingress class we have the annotation `ingressclass.kubernetes.io/is-default-class: "true"`
-      
-    
+# # Access App1
+# http://app102.stacksimplify.com/app1/index.html
+
+# # Access App2
+# http://app202.stacksimplify.com/app2/index.html
+
+# # Access Default App (App3)
+# http://default102.stacksimplify.com

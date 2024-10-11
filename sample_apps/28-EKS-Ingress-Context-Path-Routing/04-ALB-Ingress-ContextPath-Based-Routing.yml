@@ -9,7 +9,8 @@ metadata:
     # Ingress Core Settings
     #kubernetes.io/ingress.class: "alb" (OLD INGRESS CLASS NOTATION - STILL WORKS BUT RECOMMENDED TO USE IngressClass Resource)
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/target-type: ip
+   #alb.ingress.kubernetes.io/target-type: ip
+  # alb.ingress.kubernetes.io/target-type: instance
     # Health Check Settings
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP 
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port
@@ -20,8 +21,8 @@ metadata:
     alb.ingress.kubernetes.io/healthy-threshold-count: '2'
     alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'   
 spec:
-  ingressClassName: alb # my-aws-ingress-class   # Ingress Class 
-  defaultBackend:
+# ingressClassName: alb # my-aws-ingress-class   # Ingress Class 
+  defaultBackend:   # can be either as defaultBackend or path: /
     service:
       name: app3-nginx-nodeport-service
       port:

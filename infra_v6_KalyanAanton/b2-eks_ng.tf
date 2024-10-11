@@ -28,7 +28,11 @@ resource "aws_iam_role_policy_attachment" "AmazonEC2RoleforSSM" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
   role       = aws_iam_role.nodes.name
 }
-
+resource "aws_iam_role_policy_attachment" "AmazonDynamoDBFullAccessM" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+  role       = aws_iam_role.nodes.name
+  # Raf: I need this for: 15-ACG-Hands-On_with_Amazon_EKS-2023
+}
 
 # ------------------------------------------------------------------------------------------
 # --- NODES PRIVATE -------------------------------------------------------------------------

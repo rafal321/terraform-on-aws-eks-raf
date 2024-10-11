@@ -7,7 +7,7 @@ metadata:
     app: app3-nginx
   annotations:
     # Load Balancer Name
-    alb.ingress.kubernetes.io/load-balancer-name: ingress-basics-raf-v3v
+    alb.ingress.kubernetes.io/load-balancer-name: ingress-basics-raf-v1
     # Ingress Core Settings
     alb.ingress.kubernetes.io/scheme: internet-facing
     # Health Check Settings

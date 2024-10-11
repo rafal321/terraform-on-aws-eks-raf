@@ -20,12 +20,12 @@ metadata:
     alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'   
     ## SSL Settings
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:863772705192:certificate/a5c94c17-0abe-4184-a3c2-08145ed44989
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:999999999999:certificate/d1e374c5-4c94-4be2-8c54-da5a3ce3f37f
     #alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-1-2017-01 #Optional (Picks default if not used)    
     # SSL Redirect Setting
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     # External DNS - For creating a Record Set in Route53
-    external-dns.alpha.kubernetes.io/hostname: default101.opsdevops.test.hosting.com
+    external-dns.alpha.kubernetes.io/hostname: default101.ops.perf.hosting.com
 spec:
 # ingressClassName: my-aws-ingress-class   # Ingress Class                  
   defaultBackend:
@@ -34,7 +34,7 @@ spec:
       port:
         number: 80     
   rules:
-    - host: app101.opsdevops.test.hosting.com
+    - host: app101.ops.perf.hosting.com
       http:
         paths:
           - path: /
@@ -44,7 +44,7 @@ spec:
                 name: app1-nginx-nodeport-service
                 port: 
                   number: 80
-    - host: app201.opsdevops.test.hosting.com
+    - host: app201.ops.perf.hosting.com
       http:
         paths:                  
           - path: /
@@ -59,7 +59,10 @@ spec:
                         
 # 1. If  "spec.ingressClassName: my-aws-ingress-class" not specified, will reference default ingress class on this kubernetes cluster
 # 2. Default Ingress class is nothing but for which ingress class we have the annotation `ingressclass.kubernetes.io/is-default-class: "true"`
-      
-#  kubectl get ingress |c
+
+# kubectl -n kube-system logs external-dns-7675965cf9-ttscr |c
+# kubectl -n kube-system logs -f $(kubectl -n kube-system get po | egrep -o 'external-dns[A-Za-z0-9-]+') |c
+# kubectl describe ing ingress-namedbasedvhost-demo |y      
+# kubectl get ingress |c
 # NAME                           CLASS   HOSTS                                                                               ADDRESS                                                         PORTS   AGE
 # ingress-namedbasedvhost-demo   alb     app101.opsdevops.test.hosting.com,app201.opsdevops.test.hosting.com   namedbasedvhost-ingress-251243862.eu-west-1.elb.amazonaws.com   80      5m29s

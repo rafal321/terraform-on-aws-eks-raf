@@ -56,6 +56,7 @@ resource "helm_release" "aws_lbc" {
   }
   # kubectl get ingressclass -oyaml
   # kubectl describe ingressclass alb |y
+  # kubectl -n kube-system  get po | grep -E 'balancer|NAME' |c
   depends_on = [aws_iam_role.aws_lbc, aws_eks_node_group.eks_ng_private] # [helm_release.cluster_autoscaler]
 }
 
@@ -64,3 +65,6 @@ output "lbc_helm_metadata" {
   value = "${helm_release.aws_lbc.name} - ver: ${helm_release.aws_lbc.version}"
   #value       = helm_release.aws_lbc.metadata
 }
+
+# https://youtu.be/5XpPiORNy1o?si=dOnzA2WA6fRnoCuK
+# https://github.com/aws/eks-charts/blob/master/stable/aws-load-balancer-controller/README.md

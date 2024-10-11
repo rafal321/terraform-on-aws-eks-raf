@@ -49,7 +49,7 @@ data "aws_iam_policy_document" "efs_csi_driver" {
   }
 }
 
-# 2) create IAM role and attach this policy
+# 2) create IAM role and attach this trust policy
 resource "aws_iam_role" "efs_csi_driver" {
   name               = "${aws_eks_cluster.eks.name}-efs-csi-driver"
   assume_role_policy = data.aws_iam_policy_document.efs_csi_driver.json

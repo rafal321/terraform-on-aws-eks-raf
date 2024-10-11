@@ -5,7 +5,7 @@ metadata:
   labels:
     app: app1-nginx
 spec:
-  replicas: 1
+  replicas: 10
   selector:
     matchLabels:
       app: app1-nginx
@@ -31,7 +31,7 @@ metadata:
 #Important Note:  Need to add health check path annotations in service level if we are planning to use multiple targets in a load balancer    
     alb.ingress.kubernetes.io/healthcheck-path: /app1/index.html
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: app1-nginx
   ports:

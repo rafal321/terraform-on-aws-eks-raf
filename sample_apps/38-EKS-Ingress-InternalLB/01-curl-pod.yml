@@ -7,3 +7,4 @@ spec:
   - name: curl
     image: curlimages/curl 
     command: [ "sleep", "600" ]
+    resources: {}

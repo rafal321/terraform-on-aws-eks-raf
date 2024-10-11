@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: app3-nginx-deployment
   labels:
-    app: app3-nginx
+    app: app3-nginx 
 spec:
   replicas: 1
   selector:
@@ -15,28 +15,24 @@ spec:
         app: app3-nginx
     spec:
       containers:
-        - name: app3-nginx
-#         image: stacksimplify/kubenginx:1.0.0
-#         image: therafk/rkapp22:1.0
-          image: therafk/rkapp11:1.0
+        - name: app2-nginx
+          image: stacksimplify/kubenginx:1.0.0
           ports:
             - containerPort: 80
-          resources: {}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: app3-nginx-nodeport-service-xix01
+  name: app3-nginx-nodeport-service
   labels:
     app: app3-nginx
-# annotations:
+  annotations:
 #Important Note:  Need to add health check path annotations in service level if we are planning to use multiple targets in a load balancer
-#    alb.ingress.kubernetes.io/healthcheck-path: /index.html
+    alb.ingress.kubernetes.io/healthcheck-path: /index.html
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: app3-nginx
   ports:
     - port: 80
       targetPort: 80
-

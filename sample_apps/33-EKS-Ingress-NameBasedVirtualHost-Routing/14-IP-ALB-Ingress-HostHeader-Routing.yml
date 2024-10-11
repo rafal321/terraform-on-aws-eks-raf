@@ -2,10 +2,10 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-externaldns-demo
+  name: ingress-namedbasedvhost-demo
   annotations:
     # Load Balancer Name
-    alb.ingress.kubernetes.io/load-balancer-name: externaldns-ingress
+    alb.ingress.kubernetes.io/load-balancer-name: namedbasedvhost-ingress-ip
     # Ingress Core Settings
     #kubernetes.io/ingress.class: "alb" (OLD INGRESS CLASS NOTATION - STILL WORKS BUT RECOMMENDED TO USE IngressClass Resource)
     alb.ingress.kubernetes.io/scheme: internet-facing
@@ -20,12 +20,14 @@ metadata:
     alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'   
     ## SSL Settings
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
-    alb.ingress.kubernetes.io/certificate-arn: 'arn:aws:acm:eu-west-1:999999999999:certificate/d1e374c5-4c94-4be2-8c54-da5a3ce3f37f'  #_AWS_ACC_ID_
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:999999999999:certificate/d1e374c5-4c94-4be2-8c54-da5a3ce3f37f
     #alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-1-2017-01 #Optional (Picks default if not used)    
     # SSL Redirect Setting
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     # External DNS - For creating a Record Set in Route53
-    external-dns.alpha.kubernetes.io/hostname: 'dnstest901.ops.perf.hosting.com, another902.ops.perf.hosting.com'
+    external-dns.alpha.kubernetes.io/hostname: default101.ops.perf.hosting.com
+    # Target Type: IP (Defaults to Instance if not specified)
+    alb.ingress.kubernetes.io/target-type: ip
 spec:
 # ingressClassName: my-aws-ingress-class   # Ingress Class                  
   defaultBackend:
@@ -34,16 +36,20 @@ spec:
       port:
         number: 80     
   rules:
-    - http:
-        paths:      
-          - path: /app1
+    - host: app101.ops.perf.hosting.com
+      http:
+        paths:
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: app1-nginx-nodeport-service
                 port: 
                   number: 80
-          - path: /app2
+    - host: app201.ops.perf.hosting.com
+      http:
+        paths:                  
+          - path: /
             pathType: Prefix
             backend:
               service:
@@ -55,15 +61,10 @@ spec:
                         
 # 1. If  "spec.ingressClassName: my-aws-ingress-class" not specified, will reference default ingress class on this kubernetes cluster
 # 2. Default Ingress class is nothing but for which ingress class we have the annotation `ingressclass.kubernetes.io/is-default-class: "true"`
-      
-    # kubectl -n kube-system logs external-dns-7675965cf9-6swl2 |c
-    # kubectl -n kube-system logs -f $(kubectl get po | egrep -o 'external-dns[A-Za-z0-9-]+')
 
-
-# https://github.com/kubernetes-sigs/external-dns/blob/master/docs/tutorials/aws.md
-# Note created TXT record alongside ALIAS record. TXT record signifies that the corresponding ALIAS
-#  record is managed by ExternalDNS. This makes ExternalDNS safe for running in environments where
-#   there are other records managed via other means.
-
-# https://github.com/kubernetes-sigs/external-dns/blob/master/docs/faq.md
-# Frequently asked questions
+# kubectl -n kube-system logs external-dns-7675965cf9-ttscr |c
+# kubectl -n kube-system logs -f $(kubectl -n kube-system get po | egrep -o 'external-dns[A-Za-z0-9-]+') |c
+# kubectl describe ing ingress-namedbasedvhost-demo |y      
+# kubectl get ingress |c
+# NAME                           CLASS   HOSTS                                                                               ADDRESS                                                         PORTS   AGE
+# ingress-namedbasedvhost-demo   alb     app101.opsdevops.test.hosting.com,app201.opsdevops.test.hosting.com   namedbasedvhost-ingress-251243862.eu-west-1.elb.amazonaws.com   80      5m29s

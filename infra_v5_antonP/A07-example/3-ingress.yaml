@@ -1,0 +1,34 @@
+---
+# Supported annotations
+# https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.7/guide/ingress/annotations/
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myapp
+  namespace: 7-example
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: example7-name
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    # for cert to work
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    # alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:eu-west-1:863772705192:certificate/a5c94c17-0abe-4184-a3c2-08145ed44989"
+spec:
+  ingressClassName: alb
+  rules:
+    - host: rk-ex7.sweet-apple.com      # rk-ex7.opsdevops.test.openjawhosting.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: myapp
+                port:
+                  number: 8080
+
+# opsdevops.test.openjawhosting.com
+
+# RAF this doesnt work - sth wrong with R53 in this account

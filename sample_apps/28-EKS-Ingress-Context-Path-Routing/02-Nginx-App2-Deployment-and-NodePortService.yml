@@ -5,7 +5,7 @@ metadata:
   labels:
     app: app2-nginx 
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: app2-nginx
@@ -19,6 +19,7 @@ spec:
           image: stacksimplify/kube-nginxapp2:1.0.0
           ports:
             - containerPort: 80
+          resources: {}
 ---
 apiVersion: v1
 kind: Service
