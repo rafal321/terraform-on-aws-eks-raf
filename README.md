@@ -3,6 +3,7 @@
 
  infrastructure_v1
  [1] VPC - only (module)
+
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
 
  infrastructure_v2
@@ -11,10 +12,12 @@
  [3] NG
  [4] configuration
        all on one state file
+
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
 
  infrastructure_v3
  [1] EKS - only (resource)
+
 ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒
 
 Terraform on AWS EKS Kubernetes
