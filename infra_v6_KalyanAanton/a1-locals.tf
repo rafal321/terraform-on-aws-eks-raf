@@ -8,7 +8,7 @@ locals {
   zone2       = "eu-west-1b"
   eks_ver     = "1.29"
   eks_ver_ng  = "1.29"
-  eks_name    = "rkeks09" # cluster
+  eks_name    = "rkeks16" # cluster
   subnets_pub = ["subnet-0e325118b5eed09ea", "subnet-04a4b5654d58a32e1"]
   subnets_pri = ["subnet-0d5470217e38223f0", "subnet-0ea99efb622eec153"]
 }

@@ -18,7 +18,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: rk-ex7.sweet-apple.com      # rk-ex7.opsdevops.test.openjawhosting.com
+    - host: rk-ex7.sweet-apple.com      # rk-ex7.opsdevops.test.hosting.com
       http:
         paths:
           - path: /
@@ -29,6 +29,6 @@ spec:
                 port:
                   number: 8080
 
-# opsdevops.test.openjawhosting.com
+# opsdevops.test.hosting.com
 
 # RAF this doesnt work - sth wrong with R53 in this account

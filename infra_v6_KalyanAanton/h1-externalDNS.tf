@@ -89,7 +89,7 @@ resource "helm_release" "external_dns" {
     value = "aws"
   }
   set {
-    name  = "policy" 
+    name  = "policy"
     value = "sync"
     # "sync" will ensure that when ingress resource is deleted, equivalent DNS record in Route53 will get deleted
     # Default is "upsert-only" which means DNS records will not get deleted even equivalent Ingress resources are deleted 

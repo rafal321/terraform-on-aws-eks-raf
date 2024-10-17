@@ -46,12 +46,12 @@ resource "aws_eks_node_group" "eks_ng_private" {
   ami_type       = "AL2_x86_64" #"BOTTLEROCKET_x86_64"
   capacity_type  = "SPOT"
   disk_size      = 20
-  instance_types = ["t3.large", "t2.large", "r5.large", "r6a.large"] # "r6a.large"
+  instance_types = ["t3.large", "t2.large", "r5.large", "r6a.large"] # ["t3.small", "t2.small", "r5.large", "r6a.large"]  # ["t3.large", "t2.large", "r5.large", "r6a.large"] 
 
   scaling_config {
     desired_size = 2
     min_size     = 2
-    max_size     = 9
+    max_size     = 10
   }
   # Explained: Cluster Autoscaler Tutorial (EKS Pod Identities): AWS EKS Kubernetes Tutorial - Part 5
   lifecycle { ignore_changes = [scaling_config[0].desired_size] }
