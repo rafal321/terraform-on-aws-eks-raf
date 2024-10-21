@@ -46,7 +46,7 @@ resource "aws_eks_node_group" "eks_ng_private" {
   ami_type       = "AL2_x86_64" #"BOTTLEROCKET_x86_64"
   capacity_type  = "SPOT"
   disk_size      = 20
-  instance_types = ["t3.large", "t2.large", "r5.large", "r6a.large"] # ["t3.small", "t2.small", "r5.large", "r6a.large"]  # ["t3.large", "t2.large", "r5.large", "r6a.large"] 
+  instance_types = ["t3.large", "t3a.large", "t2.large", "r5.large", "r6a.large"] # "t3.large|2cpu|8GB|29po|$0.0912" ; "t3a.large|2cpu|8GB|$0.0816" ; "c6a.large|2cpu|4GB|$0.0821" 
 
   scaling_config {
     desired_size = 2

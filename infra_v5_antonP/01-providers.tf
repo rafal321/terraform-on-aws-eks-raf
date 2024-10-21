@@ -1,7 +1,5 @@
 provider "aws" {
-  region  = local.region
   profile = local.profile
-
 }
 terraform {
   required_version = ">= 1.0"

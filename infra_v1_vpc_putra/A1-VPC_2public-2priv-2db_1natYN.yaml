@@ -1,0 +1,286 @@
+Description: >
+  This template deploys a VPC, with 2 public and 2 private 2 DB subnets spread across 2 AZs.
+  It deploys an Internet Gateway, 1 NAT Gateway.
+  It deploys s3, dynamodb gateway endpoint.
+
+Parameters:
+  EnvironmentName:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+    Default: "raf.dev"
+  VpcCIDR:
+    Description: IP range for this VPC
+    Type: String
+    Default: 10.20.0.0/16
+  #---Public
+  PublicSubnet1CIDR:
+    Description: IP range for the public subnet 1 AZ1
+    Type: String
+    Default: 10.20.11.0/24
+
+  PublicSubnet2CIDR:
+    Description: IP range for the public subnet 2 AZ2
+    Type: String
+    Default: 10.20.12.0/24
+
+  #---Private
+  PrivateSubnetApp1CIDR:
+    Description: IP range for the private subnet 1 AZ1
+    Type: String
+    Default: 10.20.21.0/24
+
+  PrivateSubnetApp2CIDR:
+    Description: IP range for the private subnet 2 AZ2
+    Type: String
+    Default: 10.20.22.0/24
+
+  #---Database
+  PrivateSubnetDB1CIDR:
+    Description: IP range for the database subnet 1 AZ1
+    Type: String
+    Default: 10.20.41.0/24
+
+  PrivateSubnetDB2CIDR:
+    Description: IP range for the database subnet 2 AZ2
+    Type: String
+    Default: 10.20.42.0/24
+
+  #---Nat Y/N to save cost
+  EnableNAT:
+    Type: String
+    Description: 'You can disable/enable NAT Gateway.'
+    Default: ENABLED
+    AllowedValues:
+      - ENABLED
+      - DISABLED
+#===============================================================
+Conditions:
+   CreateNAT: !Equals [ !Ref EnableNAT, ENABLED]
+
+#===============================================================
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDR
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, vpc]]
+  #---------------------------------------------
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, igw]]
+  InternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+  #----------------------------------------------
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Ref PublicSubnet1CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, pub, a]]
+        - Key: "kubernetes.io/role/elb"
+          Value: "1"
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      CidrBlock: !Ref PublicSubnet2CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, pub, b]]
+        - Key: "kubernetes.io/role/elb"
+          Value: "1"
+  # - - - - - - - - - - - - - - - - - - - -
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Ref PrivateSubnetApp1CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, priv, a]]
+        - Key: "kubernetes.io/role/internal-elb"
+          Value: "1"
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      CidrBlock: !Ref PrivateSubnetApp2CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, priv, b]]
+        - Key: "kubernetes.io/role/internal-elb"
+          Value: "1"
+  # - - - - - - - - - - - - - - - - - - - -
+  PrivateSubnetDB1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Ref PrivateSubnetDB1CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, db, a]]
+  PrivateSubnetDB2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      CidrBlock: !Ref PrivateSubnetDB2CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, db, b]]
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription:
+        !Join [" ", [!Ref EnvironmentName, VPC, Subnet, Group]]
+      DBSubnetGroupName: !Join [., [!Ref EnvironmentName, dbsubnetgroup]]
+      SubnetIds:
+        - !Ref PrivateSubnetDB1
+        - !Ref PrivateSubnetDB2
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, dbSubnetGroup]]
+  # - - - - - - - - - - - - - - - - - - - - - - - -
+  NatGateway1EIP:
+    Type: AWS::EC2::EIP
+    Condition: CreateNAT
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      Domain: vpc
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, eip]]
+
+  NatGateway1:
+    Type: AWS::EC2::NatGateway
+    Condition: CreateNAT
+    Properties:
+      AllocationId: !GetAtt NatGateway1EIP.AllocationId
+      SubnetId: !Ref PublicSubnet1
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, nat]]
+  #------------------------------------------------------
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, publicRT]]
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1
+  PublicSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet2
+  # - - - - - - - - - - - - - - - - - - - - - - - -
+  PrivateRouteTable1:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Join [., [!Ref EnvironmentName, privateRT]]
+  DefaultPrivateRoute1:
+    Type: AWS::EC2::Route
+    Condition: CreateNAT
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable1
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway1
+
+  PrivateSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable1
+      SubnetId: !Ref PrivateSubnet1
+  PrivateSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable1
+      SubnetId: !Ref PrivateSubnet2
+
+  PrivateSubnet1dbRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable1
+      SubnetId: !Ref PrivateSubnetDB1
+  PrivateSubnet2dbRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable1
+      SubnetId: !Ref PrivateSubnetDB2
+  # ------------------------------------------------------
+  S3GatewayEndpoint: # works (run aws configure)
+    Type: "AWS::EC2::VPCEndpoint"
+    Properties:
+      VpcEndpointType: Gateway
+      RouteTableIds:
+        - !Ref PublicRouteTable
+        - !Ref PrivateRouteTable1
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.s3"
+      VpcId: !Ref VPC
+  DynamoDBGatewayEndpoint: # Experiment - not tested
+    Type: "AWS::EC2::VPCEndpoint"
+    Properties:
+      VpcEndpointType: Gateway
+      RouteTableIds:
+        - !Ref PublicRouteTable
+        - !Ref PrivateRouteTable1
+      ServiceName: !Sub "com.amazonaws.${AWS::Region}.dynamodb"
+      VpcId: !Ref VPC
+#===============================================
+Outputs:
+  VPC:
+    Description: A reference to VPC..
+    Value: !Ref VPC
+
+  PublicSubnets:
+    Description: Public subnets list
+    Value:
+      !Join ["",['["',!Ref PublicSubnet1,'","',!Ref PublicSubnet2,'"]']]
+
+  PrivateSubnets:
+    Description: Private subnets list
+    Value:
+      !Join ["",['["',!Ref PrivateSubnet1,'","',!Ref PrivateSubnet2,'"]']]
+
+  DBSubnets:
+    Description: DB subnets list
+    Value:
+      !Join ["",['["',!Ref PrivateSubnetDB1,'","',!Ref PrivateSubnetDB2,'"]']]
