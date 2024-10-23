@@ -12,6 +12,7 @@ resource "helm_release" "argocd" {
   create_namespace = true
   version          = "3.35.4"
   values           = [file("i2-argocd.yaml")]
+  depends_on = [aws_eks_node_group.eks_ng_private]
 }
 output "helm_ver_argocd" {
   value = helm_release.argocd.version
