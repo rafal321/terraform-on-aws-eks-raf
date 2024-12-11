@@ -8,11 +8,11 @@
 # helm search repo prometheus-community |c
 # helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
 resource "helm_release" "prometheus_stack" {
-  depends_on = [aws_eks_node_group.eks_ng_private, helm_release.aws_lbc ]
+  depends_on = [aws_eks_node_group.eks_ng_private, helm_release.aws_lbc]
   name       = "kube-prometheus-stack"
-  repository       = "https://prometheus-community.github.io/helm-charts"
-  chart            = "kube-prometheus-stack"
-  namespace        = "monitoring"
+  repository = "https://prometheus-community.github.io/helm-charts"
+  chart      = "kube-prometheus-stack"
+  namespace  = "monitoring"
   #version          = "65.3.1" # CHART VERSION - If this is not specified, the latest version is installed.
   create_namespace = true
 }

@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stapp-depl
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: stapp
+  template:
+    metadata:
+      labels:
+        app: stapp
+    spec:
+      containers:
+      - name: streamlit
+        image: therafk/app-st:0.1
+      # image: therafk/webapp:1.1
+        env:
+        - name: ST_HOST
+          value: mysql-server-svc.mysql-server.svc.cluster.local
+        - name: ST_PASSWORD
+          value: P@ssw0rd1234
+        ports:
+        - containerPort: 80 # 8501
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stapp-svc
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+spec:
+  type: ClusterIP
+  selector:
+    app: stapp
+  ports:
+    - port: 80
+      targetPort: 8501

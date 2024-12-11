@@ -1,4 +1,5 @@
 # deploy any helm chart to eks
+# https://www.youtube.com/watch?v=0EWsKSdmbz0&list=PLiMWaCMwGJXnKY6XmeifEpjIfkWRo9v2l&index=4
 
 # we use this to authenticate to eks
 # this will wait untill cluster is provisoned, safe to run everything together

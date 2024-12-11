@@ -33,6 +33,11 @@ resource "aws_iam_role_policy_attachment" "AmazonDynamoDBFullAccessM" {
   role       = aws_iam_role.nodes.name
   # Raf: I need this for: 15-ACG-Hands-On_with_Amazon_EKS-2023
 }
+#resource "aws_iam_role_policy_attachment" "AmazonS3FullAccess" {
+#  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+#  role       = aws_iam_role.nodes.name
+  # Raf: I need this for: test innodb s3 backups
+#}
 
 # ------------------------------------------------------------------------------------------
 # --- NODES PRIVATE -------------------------------------------------------------------------

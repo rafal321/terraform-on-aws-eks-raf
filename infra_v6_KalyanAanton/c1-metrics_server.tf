@@ -9,5 +9,8 @@ resource "helm_release" "metrics_server" {
   depends_on = [aws_eks_node_group.eks_ng_private]
 }
 
+# Horizontal Pod Autoscaler (HPA) on AWS EKS: AWS EKS Kubernetes Tutorial - Part 4
+# https://www.youtube.com/watch?v=0EWsKSdmbz0&list=PLiMWaCMwGJXnKY6XmeifEpjIfkWRo9v2l&index=4
+
 # Deploy Kubernetes Dashboard with Metrics Server using Terraform and Helm on Docker Desktop
 # https://dev.to/garis_space/terraform-and-helm-to-deploy-the-kubernetes-dashboard-1dpl

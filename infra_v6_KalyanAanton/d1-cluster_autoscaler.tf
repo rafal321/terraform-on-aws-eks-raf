@@ -1,3 +1,6 @@
+# Cluster Autoscaler Tutorial (EKS Pod Identities): AWS EKS Kubernetes Tutorial - Part 5
+# https://www.youtube.com/watch?v=HbRyRJnBEfw&t=59s
+
 resource "aws_iam_role" "cluster_autoscaler" {
   name = "${aws_eks_cluster.eks.name}-RoleForClusterAutoscaler"
   assume_role_policy = jsonencode({
@@ -16,6 +19,7 @@ resource "aws_iam_role" "cluster_autoscaler" {
     ]
   })
 }
+# For trust relationship we always use: Service = "pods.eks.amazonaws.com"
 
 resource "aws_iam_policy" "cluster_autoscaler" {
   name = "${aws_eks_cluster.eks.name}-ClusterAutoscalerPolicy"
@@ -63,6 +67,7 @@ resource "aws_eks_pod_identity_association" "cluster_autoscaler" {
   role_arn        = aws_iam_role.cluster_autoscaler.arn
 }
 
+# deploy autoscaler to EKS
 data "aws_region" "current" {}
 resource "helm_release" "cluster_autoscaler" {
   name       = "autoscaler"

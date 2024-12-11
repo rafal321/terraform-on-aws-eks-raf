@@ -4,7 +4,7 @@ metadata:
   name: mysql-rk-cluster
 spec:
   type: ExternalName
-  externalName: usermgmtdb.cbtkbkg6ojhw.eu-west-1.rds.amazonaws.com
+  externalName: usermgmtdb.cf8gzvhgghix.eu-west-1.rds.amazonaws.com
 
 #--- to connect
 # kubectl run -it --rm --image=mysql:5.7.44 --restart=Never mysql-client -- mysql -h XXXX -u XXXX -pXXXX

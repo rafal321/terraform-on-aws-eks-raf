@@ -1,0 +1,5 @@
+server:
+  extraArgs:
+    - --auth-mode=server # no credentials needed for dashboard, otherwise token is needed
+
+# need argo cli: https://argo-workflows.readthedocs.io/en/latest/walk-through/argo-cli/

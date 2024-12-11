@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp2-depl
+  labels:
+    app: webapp2-depl 
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: webapp2
+  template:
+    metadata:
+      labels:
+        app: webapp2
+    spec:
+      containers:
+        - name: webapp2
+          image: therafk/rkapp11:1.0 # webapp:2.5 # stacksimplify/kube-nginxapp2:1.0.0
+          ports:
+            - containerPort: 80
+          resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp2-svc
+  labels:
+    app: webapp2-svc
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: /index.html
+spec:
+  selector:
+    app: webapp2
+  ports:
+    - port: 80
+      targetPort: 80

@@ -65,12 +65,13 @@ resource "aws_iam_role_policy_attachment" "externaldns_policy_attachement" {
 # https://github.com/stacksimplify/terraform-on-aws-eks/tree/main/30-EKS-ExternalDNS-Install
 # https://github.com/kubernetes-sigs/external-dns/tree/master/charts/external-dns
 
+
 resource "helm_release" "external_dns" {
   depends_on = [aws_eks_node_group.eks_ng_private, aws_iam_role.externaldns_iam_role]
   name       = "external-dns"
   repository = "https://kubernetes-sigs.github.io/external-dns/"
   chart      = "external-dns"
-  # version    = if empty then it's latest
+  # version    = "1.15.0" if empty then it's latest   CHART version
   namespace = "kube-system"
   set {
     name  = "serviceAccount.create" # it is default anyway, just for reference
@@ -95,6 +96,10 @@ resource "helm_release" "external_dns" {
     # Default is "upsert-only" which means DNS records will not get deleted even equivalent Ingress resources are deleted 
     #                      (https://github.com/kubernetes-sigs/external-dns/tree/master/charts/external-dns)
   }
+  timeout = 600
+  # RAF to fix this - see if it helps:
+  # Error: 1 error occurred:
+  #│       * Internal error occurred: failed calling webhook "mservice.elbv2.k8s.aws": failed to call webhook: Post "https://aws-load-balancer-webhook-service.kube-system.svc:443/mutate-v1-service?timeout=10s": no endpoints available for service "aws-load-balancer-webhook-service"
 }
 
 

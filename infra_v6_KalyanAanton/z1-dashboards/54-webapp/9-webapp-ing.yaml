@@ -1,0 +1,46 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webapp2-ing  # rk-ing-v1
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: rk-ing-v1
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+   #alb.ingress.kubernetes.io/healthcheck-path: /healthz within service
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '15'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/success-codes: '200-299'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/target-type: ip
+    # SSL
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+    # Ingress Groups
+    alb.ingress.kubernetes.io/group.name: rk.ing.group
+    alb.ingress.kubernetes.io/group.order: '71'
+    # external-dns.alpha.kubernetes.io/hostname: defaultbackend.ops.perf.openjawhosting.com
+spec:
+  rules:
+    - host: webapp2.ops.perf.openjawhosting.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webapp2-svc
+                port:
+                  number: 80
+    - host: stapp.ops.perf.openjawhosting.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: stapp-svc
+                port:
+                  number: 80

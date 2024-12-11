@@ -37,3 +37,4 @@ spec:
                 secretKeyRef:
                   name: mysql-db-password
                   key: db-password
+          resources: {}
