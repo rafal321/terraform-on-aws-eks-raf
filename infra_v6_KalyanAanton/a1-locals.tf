@@ -1,16 +1,16 @@
 # operations
 #/*
 locals {
-  profile     = "eksuser"   # "lab"
-  env         = "dev"
+  profile     = "eksuser" # "lab"
+  env         = "dev25"
   region      = "eu-west-1"
   zone1       = "eu-west-1a"
   zone2       = "eu-west-1b"
-  eks_ver     = "1.30"       # how about upgrade in console and then update terrafoorm so it matches versions
-  eks_ver_ng  = "1.30"       # ??? 1st    Problems when upgrade: https://itnext.io/terraform-dont-use-kubernetes-provider-with-your-cluster-resource-d8ec5319d14a
-  eks_name    = "rkeks12-10" # cluster      
+  eks_ver     = "1.30" # how about upgrade in console and then update terrafoorm so it matches versions
+  eks_ver_ng  = "1.30" # ??? 1st    Problems when upgrade: https://itnext.io/terraform-dont-use-kubernetes-provider-with-your-cluster-resource-d8ec5319d14a
+  eks_name    = "rkeks01-04"
   subnets_pub = ["subnet-0e325118b5eed09ea","subnet-04a4b5654d58a32e1"]
-# subnets_pri = ["subnet-0d5470217e38223f0","subnet-0ea99efb622eec153"]
+#  subnets_pri = ["subnet-0d5470217e38223f0","subnet-0ea99efb622eec153"]
   subnets_pri = ["subnet-059fcd3909335769d","subnet-078f93eaa906462d6"] # secondary
 }
 #*/

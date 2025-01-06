@@ -7,6 +7,7 @@
 # helm repo list
 # helm search repo prometheus-community |c
 # helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace
+/*
 resource "helm_release" "prometheus_stack" {
   depends_on = [aws_eks_node_group.eks_ng_private, helm_release.aws_lbc]
   name       = "kube-prometheus-stack"
@@ -17,7 +18,7 @@ resource "helm_release" "prometheus_stack" {
   create_namespace = true
 }
 output "helm_ver_prometheus-stack" { value = helm_release.prometheus_stack.version }
-
+*/
 
 
 

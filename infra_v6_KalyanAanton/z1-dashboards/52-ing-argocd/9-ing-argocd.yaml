@@ -25,7 +25,7 @@ metadata:
     # external-dns.alpha.kubernetes.io/hostname: defaultbackend.ops.perf.openjawhosting.com
 spec:
   rules:  
-    - host: argocd.opsdevops.test.openjawhosting.com           # argocd.ops.perf.openjawhosting.com
+    - host: argocd.ops.perf.openjawhosting.com  # argocd.opsdevops.test.openjawhosting.com           # argocd.ops.perf.openjawhosting.com
       http:
         paths:
           - path: /

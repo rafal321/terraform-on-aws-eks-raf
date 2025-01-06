@@ -1,4 +1,4 @@
-#/*
+# /*
 
 # EKS EFS CSI Driver Tutorial (ReadWriteMany) & OIDC: AWS EKS Kubernetes Tutorial - Part 9
 # efs-csi driver doesn't support eks pod identity so we need 
@@ -111,7 +111,7 @@ resource "kubernetes_storage_class_v1" "efs" {
 }
 # tail driver logs to make sure all is good
 # kubectl logs -l app.kubernetes.io/instance=aws-efs-csi-driver -n kube-system
-
+# */
 # ----------------------------------------
 # raf created based on: terraform-on-aws-eks-raf/infra_v5_antonP/A10-example
 # this is causing issues if run during creation
@@ -130,7 +130,3 @@ resource "kubernetes_storage_class_v1" "ebs" {
   allow_volume_expansion = true
 }
 
-
-
-
-#*/

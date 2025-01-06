@@ -12,6 +12,7 @@ data "aws_iam_policy_document" "aws_lbc" {
 resource "aws_iam_role" "aws_lbc" {
   name               = "${local.env}-${local.eks_name}-RoleForLBC"
   assume_role_policy = data.aws_iam_policy_document.aws_lbc.json
+  depends_on         = [aws_eks_node_group.eks_ng_private]
 }
 
 # policy for AWS controller
@@ -31,7 +32,7 @@ resource "aws_eks_pod_identity_association" "aws_lbc" {
   namespace       = "kube-system"
   service_account = "aws-load-balancer-controller"
   role_arn        = aws_iam_role.aws_lbc.arn
-  depends_on = [aws_eks_node_group.eks_ng_private, aws_iam_role.aws_lbc]
+  depends_on      = [aws_iam_role.aws_lbc]
 }
 
 # we deploy controller using helm chart
@@ -58,7 +59,7 @@ resource "helm_release" "aws_lbc" {
   # kubectl get ingressclass -oyaml
   # kubectl describe ingressclass alb |y
   # kubectl -n kube-system  get po | grep -E 'balancer|NAME' |c
-  depends_on = [aws_eks_node_group.eks_ng_private, aws_iam_role.aws_lbc] # [helm_release.cluster_autoscaler]
+  depends_on = [aws_iam_role.aws_lbc] # [helm_release.cluster_autoscaler]
 }
 
 # output "zzzz" {#   value = data.aws_iam_policy_document.aws_lbc}

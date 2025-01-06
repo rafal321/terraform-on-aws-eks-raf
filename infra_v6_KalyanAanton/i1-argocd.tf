@@ -12,7 +12,7 @@ resource "helm_release" "argocd" {
   chart            = "argo-cd"
   namespace        = "argocd"
   create_namespace = true
-  version          = "3.35.4"   # CHART version
+  version          = "3.35.4" # CHART version
   values           = [file("i2-argocd.yaml")]
   depends_on       = [aws_eks_node_group.eks_ng_private, helm_release.aws_lbc]
   lifecycle { create_before_destroy = false }

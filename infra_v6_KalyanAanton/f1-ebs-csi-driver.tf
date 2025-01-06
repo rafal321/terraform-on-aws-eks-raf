@@ -1,4 +1,4 @@
-# /*
+#/*
 # 1 trust policy to grant premissions
 data "aws_iam_policy_document" "ebs_csi_driver" {
   statement {

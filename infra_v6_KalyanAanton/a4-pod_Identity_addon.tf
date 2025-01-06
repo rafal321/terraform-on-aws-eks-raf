@@ -7,3 +7,4 @@ resource "aws_eks_addon" "pod_identity" {
 # aws eks describe-addon-versions --profile lab --addon-name eks-pod-identity-agent
 # aws eks describe-addon-versions --profile lab --output text | grep -C 4 eks-pod-identity-agent
 # aws eks describe-addon-versions --profile dev --addon-name eks-pod-identity-agent --output table --no-cli-pager | grep eksbuild
+# aws eks describe-addon-versions --profile eksuser --addon-name eks-pod-identity-agent | grep addonVersion

@@ -1,5 +1,6 @@
 # Cluster Autoscaler Tutorial (EKS Pod Identities): AWS EKS Kubernetes Tutorial - Part 5
 # https://www.youtube.com/watch?v=HbRyRJnBEfw&t=59s
+# https://youtu.be/0EWsKSdmbz0?si=fvVlrxY5gjMqhYF5 
 
 resource "aws_iam_role" "cluster_autoscaler" {
   name = "${aws_eks_cluster.eks.name}-RoleForClusterAutoscaler"
@@ -93,3 +94,5 @@ resource "helm_release" "cluster_autoscaler" {
 # output "zzz1" {
 #   value = data.aws_region.current
 # }
+
+# aws eks describe-addon-versions --profile eksuser --addon-name eks-pod-identity-agent | grep addonVersion
