@@ -1,0 +1,47 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inflate-critical
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: inflate-critical
+  template:
+    metadata:
+      labels:
+        app: inflate-critical
+    spec:
+      terminationGracePeriodSeconds: 10
+      topologySpreadConstraints:
+        - maxSkew: 2
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: inflate-critical
+
+      nodeSelector:
+        karpenter.sh/nodepool: system
+      tolerations:
+      - key: "CriticalAddonsOnly"
+        operator: "Exists"
+        effect: "NoSchedule"
+
+      containers:
+        - name: inflate-critical
+          image: public.ecr.aws/eks-distro/kubernetes/pause:3.7
+          resources:
+            requests:
+              cpu: 50m  # 500m
+              memory: 256Mi # 32Mi # 1Gi
+            limits:
+              cpu: 100m
+              memory: 512Mi
+
+# kubectl get nodepool -owide|c
+# NAME                 NODECLASS   NODES   READY   AGE    WEIGHT   CPU   MEMORY
+# general-purpose      default     0       True    11h             0     0
+# rk1-node-pool-spot   default     2       True    146m            4     7960208Ki
+# system               default     1       True    11h             2     3896724Ki

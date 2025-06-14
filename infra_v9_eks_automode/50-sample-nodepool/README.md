@@ -1,3 +1,11 @@
+```
+helm install metrics-server metrics-server/metrics-server \
+  --namespace kube-system \
+  --set "args={--kubelet-insecure-tls}" \
+  --set "nodeSelector.karpenter\.sh/nodepool=system" \
+  --set 'tolerations[0].key=CriticalAddonsOnly' \
+  --set 'tolerations[0].operator=Exists'
+```
 ## Kubernetes: `nodeSelector` vs. `nodeAffinity` - A Tale of Two Scheduling Strategies
 
 In the world of Kubernetes, ensuring your pods land on the most appropriate nodes is crucial for performance, resilience, and cost-effectiveness. Two key mechanisms for achieving this are `nodeSelector` and `nodeAffinity`. While both aim to guide the Kubernetes scheduler, they offer significantly different levels of flexibility and expressiveness.

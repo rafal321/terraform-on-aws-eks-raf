@@ -15,7 +15,8 @@ tolerations:
 
 # helm upgrade --install metrics-server bitnami/metrics-server \
 #  --namespace kube-system \
+#  --set "nodeSelector.karpenter\.sh/nodepool=system"
 #  --set tolerations[0].key=CriticalAddonsOnly \
 #  --set tolerations[0].operator=Equal \
-#  --set tolerations[0].value=true \
+#  --set tolerations[0].value="true" \
 #  --set tolerations[0].effect=NoSchedule
