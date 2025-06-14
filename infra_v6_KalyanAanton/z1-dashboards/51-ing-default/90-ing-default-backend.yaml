@@ -22,14 +22,14 @@ metadata:
     # Ingress Groups
     alb.ingress.kubernetes.io/group.name: rk.ing.group
     alb.ingress.kubernetes.io/group.order: '100'
-    external-dns.alpha.kubernetes.io/hostname: defaultbackend.ops.perf.openjawhosting.com
+    external-dns.alpha.kubernetes.io/hostname: defaultbackend.ops.perf.hosting.com
 spec:
   tls:      # this allows skip certificate-arn
   - hosts:
-      - ops.perf.openjawhosting.com
+      - ops.perf.hosting.com
   defaultBackend:
     service:
       name: app-default-backend-svc
       port:
         number: 80
-
+# kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d

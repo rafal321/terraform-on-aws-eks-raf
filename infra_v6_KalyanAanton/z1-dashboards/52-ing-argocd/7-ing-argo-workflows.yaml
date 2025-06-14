@@ -24,7 +24,7 @@ metadata:
     alb.ingress.kubernetes.io/group.order: '903'
 spec:
   rules:
-  - host: workflows.ops.perf.openjawhosting.com
+  - host: workflows.ops.perf.hosting.com
     http:
       paths:
       - path: /

@@ -21,10 +21,10 @@ metadata:
     # Ingress Groups
     alb.ingress.kubernetes.io/group.name: rk.ing.group
     alb.ingress.kubernetes.io/group.order: '71'
-    # external-dns.alpha.kubernetes.io/hostname: defaultbackend.ops.perf.openjawhosting.com
+    # external-dns.alpha.kubernetes.io/hostname: defaultbackend.ops.perf.hosting.com
 spec:
   rules:
-    - host: webapp2.ops.perf.openjawhosting.com
+    - host: webapp2.ops.perf.hosting.com
       http:
         paths:
           - path: /
@@ -34,7 +34,7 @@ spec:
                 name: webapp2-svc
                 port:
                   number: 80
-    - host: stapp.ops.perf.openjawhosting.com
+    - host: stapp.ops.perf.hosting.com
       http:
         paths:
           - path: /

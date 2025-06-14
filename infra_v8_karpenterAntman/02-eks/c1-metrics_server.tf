@@ -6,7 +6,7 @@ resource "helm_release" "metrics_server" {
   version    = "3.12.1"
   #values = [file("${path.module}/values/metrics-server.yaml")]
   values     = ["${file("c2-metrics-server.yaml")}"]
-  depends_on = [aws_eks_node_group.eks_ng_private]
+  depends_on = [module.eks]
 }
 
 # Horizontal Pod Autoscaler (HPA) on AWS EKS: AWS EKS Kubernetes Tutorial - Part 4
@@ -14,10 +14,3 @@ resource "helm_release" "metrics_server" {
 
 # Deploy Kubernetes Dashboard with Metrics Server using Terraform and Helm on Docker Desktop
 # https://dev.to/garis_space/terraform-and-helm-to-deploy-the-kubernetes-dashboard-1dpl
-
-# Install on  kinD cluster
-# helm upgrade --install metrics-server metrics-server/metrics-server --namespace kube-system --set args={--kubelet-insecure-tls}
-
-# Istio sample app
-# kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.26/samples/bookinfo/platform/kube/bookinfo.yaml
-# kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.26/samples/bookinfo/platform/kube/bookinfo-versions.yaml

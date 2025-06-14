@@ -1,0 +1,36 @@
+---
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner # each provisoner controls scheduling of a group of nodes
+metadata:
+  name: z1-test-provisioner
+spec:
+  # ttlSecondsAfterEmpty: 60 # time to wait before terminating empty nodes
+  # ttlSecondsUntilExpired: 900 # expire nodes after 15 minutes
+  limits:
+    resources:
+      cpu: "1000"
+      memory: "1000Gi"
+  requirements:
+    - key: karpenter.k8s.aws/instance-family
+      operator: In
+      values: ["t3", "t4g", "r5d"]
+    - key: karpenter.k8s.aws/instance-size
+      operator: NotIn
+      values: ["nano", "micro"]
+  consolidation:
+    enabled: true
+  labels:
+    karpenter.sh/capacity-type: spot
+---
+apiVersion: karpenter.k8s.aws/v1alpha1
+kind: AWSNodeTemplate
+metadata:
+  name: z1-test-node-template
+spec:
+  amiFamily: AL2 # Amazon Linux 2
+  subnetSelector:
+    karpenter.sh/discovery: dev25-karpenter-05-24
+  securityGroupSelector:
+    karpenter.sh/discovery: dev25-karpenter-05-24
+  tags:
+    testing123: Provisioner

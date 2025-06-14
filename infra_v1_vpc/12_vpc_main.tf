@@ -32,7 +32,7 @@ module "vpc" {
     Workspace = terraform.workspace
     Test1     = "${var.vpc_name}-vpc"
     Test2     = var.aws_region
-    Section = "infrastructure_v1"
+    Section   = "infrastructure_v1"
   }
 }
 ################################################################################

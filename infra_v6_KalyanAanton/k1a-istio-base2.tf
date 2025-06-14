@@ -1,4 +1,4 @@
-#  Istio Tutorial (Service Mesh - Ingress Gateway - Virtual Service - Gateway - Ingress - mTLS) 
+#  Istio Tutorial (Service Mesh - Ingress Gateway - Virtual Service - Gateway - Ingress - mTLS)  (Anton Putra)
 # https://www.youtube.com/watch?v=H4YIKwAQMKk
 
 # Amazon EKS Cluster w/ Istio
@@ -105,3 +105,7 @@ resource "helm_release" "gateway" {
 # NAME                    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
 # my-istio-base-release   istio-system    1               2024-12-13 12:17:28.134418663 +0000 UTC deployed        base-1.24.1     1.24.1
 # my-istiod-release       istio-system    1               2024-12-13 12:17:37.834269727 +0000 UTC deployed        istiod-1.24.1   1.24.1
+
+# Istio sample app 2025-06-08
+# kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.26/samples/bookinfo/platform/kube/bookinfo.yaml
+# kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.26/samples/bookinfo/platform/kube/bookinfo-versions.yaml

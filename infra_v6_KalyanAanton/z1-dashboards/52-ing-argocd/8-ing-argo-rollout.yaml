@@ -24,7 +24,7 @@ metadata:
     alb.ingress.kubernetes.io/group.order: '902'
 spec:
   rules:
-  - host: rollouts.ops.perf.openjawhosting.com
+  - host: rollouts.ops.perf.hosting.com
     http:
       paths:
       - path: /

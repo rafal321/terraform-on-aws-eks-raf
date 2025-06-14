@@ -22,10 +22,10 @@ metadata:
     # Ingress Groups
     alb.ingress.kubernetes.io/group.name: rk.ing.group
     alb.ingress.kubernetes.io/group.order: '901'
-    # external-dns.alpha.kubernetes.io/hostname: defaultbackend.ops.perf.openjawhosting.com
+    # external-dns.alpha.kubernetes.io/hostname: defaultbackend.ops.perf.hosting.com
 spec:
   rules:  
-    - host: argocd.ops.perf.openjawhosting.com  # argocd.opsdevops.test.openjawhosting.com           # argocd.ops.perf.openjawhosting.com
+    - host: argocd.ops.perf.hosting.com  # argocd.opsdevops.test.hosting.com           # argocd.ops.perf.hosting.com
       http:
         paths:
           - path: /

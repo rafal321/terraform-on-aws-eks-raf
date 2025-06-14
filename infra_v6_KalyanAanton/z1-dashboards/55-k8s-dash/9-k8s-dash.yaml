@@ -2,14 +2,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: rk-ing-v1
-  namespace: monitoring
+  name: k8s-dash  # rk-ing-v1
+  namespace: kubernetes-dashboard
   annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: https
     alb.ingress.kubernetes.io/load-balancer-name: rk-ing-v1
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
     alb.ingress.kubernetes.io/healthcheck-port: traffic-port
-    alb.ingress.kubernetes.io/healthcheck-path: /api/health   # for grafana only
+    alb.ingress.kubernetes.io/healthcheck-path: /
     alb.ingress.kubernetes.io/healthcheck-interval-seconds: '15'
     alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
     alb.ingress.kubernetes.io/success-codes: '200-299'
@@ -21,28 +23,34 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
     # Ingress Groups
     alb.ingress.kubernetes.io/group.name: rk.ing.group
-    alb.ingress.kubernetes.io/group.order: '98'
+    alb.ingress.kubernetes.io/group.order: '955'
 spec:
   rules:  
-    - host: grafana.ops.perf.hosting.com
+    - host: k8s-dash.ops.perf.hosting.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: kube-prometheus-stack-grafana
-                port: 
-                  number: 80
-    - host: prometheus.ops.perf.hosting.com       # https://prometheus.ops.perf.hosting.com/graph
-      http:
-        paths:
-          - path: /
+                name: kubernetes-dashboard-web
+                port:
+                  name: web
+          - path: /                  # /#/login
             pathType: Prefix
             backend:
               service:
-                name: kube-prometheus-stack-prometheus
-                port: 
-                  number: 9090
-# Grafana Dasboards
-# https://grafana.com/grafana/dashboards/
+                name: kubernetes-dashboard-kong-proxy
+                port:
+                  name: kong-proxy-tls
+          - path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: kubernetes-dashboard-api
+                port:
+                  name: api 
+
+
+
+

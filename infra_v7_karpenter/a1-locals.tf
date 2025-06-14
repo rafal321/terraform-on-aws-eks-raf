@@ -1,14 +1,14 @@
 # operations
 #/*
 locals {
-  profile     = "dev" 
+  profile     = "dev"
   env         = "dev25"
   region      = "eu-west-1"
   zone1       = "eu-west-1a"
   zone2       = "eu-west-1b"
   eks_ver     = "1.31" # how about upgrade in console and then update terrafoorm so it matches versions
   eks_ver_ng  = "1.31" # ??? 1st    Problems when upgrade: https://itnext.io/terraform-dont-use-kubernetes-provider-with-your-cluster-resource-d8ec5319d14a
-  eks_name    = "karpenter-05-21"
+  eks_name    = "karpenter-05-24"
   subnets_pub = ["subnet-0ae783ef65d0e3f98", "subnet-00d0776b2f2e04b8b"]
   subnets_pri = ["subnet-0c356595cb97b2e5a", "subnet-084a53ca561cc55a0"]
   # subnets_pri = ["subnet-0ab479a802b7b8b99", "subnet-0ab479a802b7b8b99"] # secondary

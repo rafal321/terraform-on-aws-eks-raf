@@ -1,0 +1,33 @@
+# https://docs.aws.amazon.com/eks/latest/userguide/create-node-pool.html
+---
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: rk1-node-pool-spot
+spec:
+  template:
+    metadata:
+      labels:
+        billing-team: rk1-team
+    spec:
+      nodeClassRef:
+        group: eks.amazonaws.com
+        kind: NodeClass
+        name: default
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values:
+          - spot
+        - key: "eks.amazonaws.com/instance-category"
+          operator: In
+          values: ["t", "r"]
+        - key: "eks.amazonaws.com/instance-cpu"
+          operator: In
+          values: ["2", "4", "8"]
+        - key: "kubernetes.io/arch"
+          operator: In
+          values: ["arm64", "amd64"]
+  limits:
+    cpu: "1000"
+    memory: 1000Gi

@@ -4,7 +4,7 @@
 # https://dev.to/suzuki0430/implementing-s3-gateway-vpc-endpoints-with-terraform-1ph1
 
 resource "aws_vpc" "main" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = local.cidr_vpc
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
@@ -19,7 +19,6 @@ resource "aws_internet_gateway" "igw" {
     Name = "${local.customer}-${local.env}-igw"
   }
 }
-
 resource "aws_eip" "nat" {
   domain = "vpc"
   tags = {
@@ -31,11 +30,10 @@ resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat.id
   subnet_id     = aws_subnet.public_zone1.id
   tags = {
-    Name = "${local.customer}-${local.env}-nat-${local.zone1}"
+    Name = "${local.customer}-${local.env}-nat-${local.region}a"
   }
   depends_on = [aws_internet_gateway.igw]
 }
-
 resource "aws_vpc_endpoint" "s3_gateway" {
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${local.region}.s3"
@@ -75,7 +73,6 @@ resource "aws_vpc_endpoint" "dynamodb_gateway" {
     POLICY
   tags            = { Name = "${local.customer}-${local.env}-dynamodb-gateway" }
 }
-
 # ######################################################################
 # ROUTE TABLES
 resource "aws_route_table" "private" {
@@ -118,86 +115,83 @@ resource "aws_route_table_association" "database_zone2" {
   subnet_id      = aws_subnet.database_zone2.id
   route_table_id = aws_route_table.private.id
 }
-
 # ######################################################################
 # PUBLIC
 resource "aws_subnet" "public_zone1" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.11.0/24" # IPs:256 Range: 10.0.11.0 - 10.0.11.255
-  availability_zone       = local.zone1
+  cidr_block              = local.cidr_block_pub1
+  availability_zone       = "${local.region}a"
   map_public_ip_on_launch = true
   tags = {
-    Name                     = "${local.customer}-${local.env}-public-${local.zone1}"
-    "kubernetes.io/role/elb" = "1"
-    Tier                     = "Public"
-    "kubernetes.io/cluster/${local.ekscluster}" = "owned"  #(need it If we intend to have more than one cluster)
+    Name                                        = "${local.customer}-${local.env}-public-${local.region}a"
+    "kubernetes.io/role/elb"                    = "1"
+    Tier                                        = "Public"
+    "kubernetes.io/cluster/${local.ekscluster}" = "owned" #(need it If we intend to have more than one cluster)
   }
 }
 resource "aws_subnet" "public_zone2" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.12.0/24" # IPs:256 Range: 10.0.12.0 - 10.0.12.255
-  availability_zone       = local.zone2
+  cidr_block              = local.cidr_block_pub2
+  availability_zone       = "${local.region}b"
   map_public_ip_on_launch = true
   tags = {
-    Name                     = "${local.customer}-${local.env}-public-${local.zone2}"
-    "kubernetes.io/role/elb" = "1"
-    Tier                     = "Public"
+    Name                                        = "${local.customer}-${local.env}-public-${local.region}b"
+    "kubernetes.io/role/elb"                    = "1"
+    Tier                                        = "Public"
     "kubernetes.io/cluster/${local.ekscluster}" = "owned" # (need it If we intend to have more than one cluster)
   }
 }
 # PRIVATE
 resource "aws_subnet" "private_zone1" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.112.0/20" # IPs:4096 Range: 10.0.96.0 - 10.0.111.255
-  availability_zone = local.zone1
+  cidr_block        = local.cidr_block_priv1
+  availability_zone = "${local.region}a"
   tags = {
-    Name                              = "${local.customer}-${local.env}-private-${local.zone1}"
-    Tier                              = "Private"
-    "kubernetes.io/role/internal-elb" = "1"
-    "kubernetes.io/cluster/${local.ekscluster}" = "owned"  #(need it If we intend to have more than one cluster)
+    Name                                        = "${local.customer}-${local.env}-private-${local.region}a"
+    Tier                                        = "Private"
+    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/cluster/${local.ekscluster}" = "owned" #(need it If we intend to have more than one cluster)
   }
 }
 resource "aws_subnet" "private_zone2" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.128.0/20" # IPs:4096 Range: 10.0.128.0 - 10.0.143.255
-  availability_zone = local.zone2
+  cidr_block        = local.cidr_block_priv2
+  availability_zone = "${local.region}b"
   tags = {
-    Name                              = "${local.customer}-${local.env}-private-${local.zone2}"
-    Tier                              = "Private"
-    "kubernetes.io/role/internal-elb" = "1"
-    "kubernetes.io/cluster/${local.ekscluster}" = "owned"  #(need it If we intend to have more than one cluster)
+    Name                                        = "${local.customer}-${local.env}-private-${local.region}b"
+    Tier                                        = "Private"
+    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/cluster/${local.ekscluster}" = "owned" #(need it If we intend to have more than one cluster)
   }
 }
 # DATABASE
 resource "aws_subnet" "database_zone1" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.21.0/24"
-  availability_zone = local.zone1
+  cidr_block        = local.cidr_block_db1
+  availability_zone = "${local.region}a"
   tags = {
-    Name = "${local.customer}-${local.env}-database-${local.zone1}"
+    Name = "${local.customer}-${local.env}-database-${local.region}a"
     Tier = "Database"
   }
 }
 resource "aws_subnet" "database_zone2" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.22.0/24"
-  availability_zone = local.zone2
+  cidr_block        = local.cidr_block_db2
+  availability_zone = "${local.region}b"
   tags = {
-    Name = "${local.customer}-${local.env}-database-${local.zone2}"
+    Name = "${local.customer}-${local.env}-database-${local.region}b"
     Tier = "Database"
   }
 }
-
 resource "aws_db_subnet_group" "sub_group" {
-  name       = "${local.customer}-${local.env}-sub.group"
+  name       = "${local.customer}-${local.env}-db-sub-group"
   subnet_ids = [aws_subnet.database_zone1.id, aws_subnet.database_zone2.id]
 
   tags = {
-    Name = "${local.customer}-${local.env}-sub.group"
+    Name = "${local.customer}-${local.env}-db-sub-group"
     Tier = "Database"
   }
 }
-
 # ######################################################################
 # OUTPUTS
 output "aws_vpc_name" {
@@ -210,7 +204,7 @@ output "subnet_public" {
   value = ["${aws_subnet.public_zone1.id}", "${aws_subnet.public_zone2.id}"]
 }
 output "subnet_database" {
-  value = ["${aws_subnet.database_zone2.id}", "${aws_subnet.database_zone2.id}"]
+  value = ["${aws_subnet.database_zone1.id}", "${aws_subnet.database_zone2.id}"]
 }
 output "db_sub_group_name" {
   value = aws_db_subnet_group.sub_group.name

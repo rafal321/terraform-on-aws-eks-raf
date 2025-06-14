@@ -9,10 +9,11 @@
 #       kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null || \
 #         { kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.0/standard-install.yaml; }
 
-# helm install istiod istio/istiod --namespace istio-system --set profile=ambient --wait
+# helm install istiod istio/istiod --namespace istio-system --set profile=ambient --wait --create-namespace
 # helm install istio-cni istio/cni -n istio-system --set profile=ambient --wait
 # helm install ztunnel istio/ztunnel -n istio-system --wait
 # helm install istio-ingress istio/gateway -n istio-ingress --create-namespace --wait
+# helm ls -n istio-system ; helm ls -n istio-ingress | tail -n +2
 /*
 resource "helm_release" "istio_base" {
   name = "my-istio-base-release"
@@ -21,7 +22,7 @@ resource "helm_release" "istio_base" {
   chart            = "base" # what helm chart you want to use
   namespace        = "istio-system"
   create_namespace = true
-  version          =  "1.17.1"  #"1.24.1"
+  version          =  "1.25.0" # "1.17.1"  #"1.24.1"
 
   set {
     name  = "global.istioNamespace"
@@ -36,7 +37,7 @@ resource "helm_release" "istiod" {
   chart            = "istiod"
   namespace        = "istio-system"
   create_namespace = true
-  version          = "1.24.1"     # https://artifacthub.io/packages/helm/istio-official/ambient  RAF SEE THIS
+  version          = "1.25.0" # "1.24.1"     # https://artifacthub.io/packages/helm/istio-official/ambient  RAF SEE THIS
   # set {
   #   name  = "profile"
   #   value = "ambient"
@@ -59,38 +60,41 @@ resource "helm_release" "istiod" {
   }
   depends_on = [helm_release.istio_base]
 }
+
 resource "helm_release" "istio_cni" {
   name             = "my-cni-release"
   repository       = "https://istio-release.storage.googleapis.com/charts"
   chart            = "cni"
   namespace        = "istio-system"
   create_namespace = true
-  version          = "1.24.1"
+  version          = "1.25.0" # "1.24.1"
   set {
     name  = "profile"
     value = "ambient"
   }
   depends_on = [helm_release.istiod]
 }
+
 resource "helm_release" "istio_ztunnel" {   # we collect metrics here too??
   name             = "my-ztunnel-release"
   repository       = "https://istio-release.storage.googleapis.com/charts"
   chart            = "ztunnel"
   namespace        = "istio-system"
   create_namespace = true
-  version          = "1.24.1"
+  version          = "1.25.0" # "1.24.1"
   depends_on       = [helm_release.istio_base]
 }
+
 resource "helm_release" "gateway" {         # Waypoint proxies are deployed using Kubernetes Gateway resources. (pod at namespace level - scaleable)
   name             = "gateway"              # this creates AWS - NLB 
   repository       = "https://istio-release.storage.googleapis.com/charts"
   chart            = "gateway"
   namespace        = "istio-ingress"
   create_namespace = true
-  version          = "1.24.1"
+  version          = "1.25.0" # "1.24.1"
   depends_on       = [helm_release.istio_base]
 }
-*/
+ */
 # helm ls -n istio-system |c
 # NAME                    NAMESPACE       REVISION        UPDATED                                 STATUS          CHART           APP VERSION
 # my-cni-release          istio-system    1               2024-12-13 20:22:59.476893716 +0000 UTC deployed        cni-1.24.1      1.24.1
@@ -139,3 +143,5 @@ resource "helm_release" "gateway" {         # Waypoint proxies are deployed usin
 # A Not-so-Scary Way to Add Istio to Your Platform, Step by Step - John Keates, Wehkamp Retail Group
 # https://youtu.be/8pgn5UaHkmQ?si=3WEmAhPpTt9TDJ8W		Great What istio is - what you need
 # https://youtu.be/gP_hB97oVzU?si=0-5RZnZpBcEhR7eq
+
+

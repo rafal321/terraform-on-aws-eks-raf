@@ -53,9 +53,9 @@ resource "aws_eks_node_group" "eks_ng_private" {
   instance_types = ["t3.large", "t3a.large", "t2.large", "r5.large", "r6a.large"] # "t3.large|2cpu|8GB|29po|$0.0912" ; "t3a.large|2cpu|8GB|$0.0816" ; "c6a.large|2cpu|4GB|$0.0821" 
 
   scaling_config {
-    desired_size = 3
-    min_size     = 3
-    max_size     = 10
+    desired_size = 2
+    min_size     = 2
+    max_size     = 8
   }
   # Explained: Cluster Autoscaler Tutorial (EKS Pod Identities): AWS EKS Kubernetes Tutorial - Part 5
   lifecycle { ignore_changes = [scaling_config[0].desired_size] }
