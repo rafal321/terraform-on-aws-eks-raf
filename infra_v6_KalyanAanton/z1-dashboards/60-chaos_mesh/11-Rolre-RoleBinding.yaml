@@ -1,0 +1,26 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: chaos-experiment-creator
+  namespace: default # Or the namespace where you want to run experiments
+rules:
+- apiGroups: ["chaos-mesh.org"]
+  resources: ["podchaos", "networkchaos", "iochaos", "stresschaos", "kernelchaos", "timechaos", "dnschaos", "jvmchaos", "physicalmachinechaos", "schedules", "workflows"]
+  verbs: ["create", "get", "list", "watch", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: bind-chaos-experiment-creator
+  namespace: default # Or the namespace where you want to run experiments
+subjects:
+- kind: User # Or ServiceAccount if you're using a service account
+  name: "arn:aws:sts::863772705192:assumed-role/OJT_AccountAccessRole/" # Replace with your Kubernetes username or service account name
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: chaos-experiment-creator
+  apiGroup: rbac.authorization.k8s.io
+
+
+# kubectl auth whoami

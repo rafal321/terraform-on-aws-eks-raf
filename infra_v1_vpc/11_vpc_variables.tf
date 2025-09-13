@@ -12,5 +12,5 @@ variable "vpc_name" {
 variable "aws_profile" {
   description = "var.aws_profile"
   type        = string
-  default     = "dev"
+  default     = "operations-aws"
 }

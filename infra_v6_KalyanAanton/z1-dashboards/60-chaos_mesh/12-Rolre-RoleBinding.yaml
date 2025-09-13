@@ -1,0 +1,25 @@
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: chaos-mesh-cluster-manager
+rules:
+  - apiGroups:
+      - chaos-mesh.org
+    resources: ['*']
+    verbs: ['get', 'list', 'watch', 'create', 'delete', 'patch', 'update']
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cluster-manager-binding
+  namespace: chaos-mesh
+subjects:
+  - kind: User
+    name: example@gmail.com
+roleRef:
+  kind: ClusterRole
+  name: chaos-mesh-cluster-manager
+  apiGroup: rbac.authorization.k8s.io
+
+# https://chaos-mesh.org/docs/gcp-authentication/
+# kubectl auth whoami

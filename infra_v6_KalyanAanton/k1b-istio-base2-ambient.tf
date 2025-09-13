@@ -67,7 +67,7 @@ resource "helm_release" "istio_cni" {
   chart            = "cni"
   namespace        = "istio-system"
   create_namespace = true
-  version          = "1.25.0" # "1.24.1"
+  version          = "1.26.2" # "1.25.0" # "1.24.1"
   set {
     name  = "profile"
     value = "ambient"

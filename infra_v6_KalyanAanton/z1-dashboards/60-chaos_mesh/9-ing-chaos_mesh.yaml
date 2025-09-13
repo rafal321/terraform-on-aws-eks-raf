@@ -1,0 +1,40 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chaos-mesh-ing
+  namespace: chaos-mesh
+  annotations:
+    alb.ingress.kubernetes.io/load-balancer-name: rk-ing-v1
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    alb.ingress.kubernetes.io/healthcheck-path: /
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '15'
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: '5'
+    alb.ingress.kubernetes.io/success-codes: '200-299'
+    alb.ingress.kubernetes.io/healthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
+    alb.ingress.kubernetes.io/target-type: ip
+    # SSL
+    # alb.ingress.kubernetes.io/ssl-redirect: '443'
+    # alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+    # # Ingress Groups
+    # alb.ingress.kubernetes.io/group.name: rk.ing.group
+    # alb.ingress.kubernetes.io/group.order: '901'
+    # external-dns.alpha.kubernetes.io/hostname: defaultbackend.ops.perf.hosting.com
+spec:
+  rules:  
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: chaos-dashboard
+                port: 
+                  number: 2333
+
+# kubectl -n argocd get secret/argocd-initial-admin-secret -oyaml | grep password | awk '{print $NF}' | base64 -d ; echo
+# kubectl -n argocd get secret/argocd-initial-admin-secret -oyaml | awk '/password/ {print $NF}' | base64 -d ; echo
+

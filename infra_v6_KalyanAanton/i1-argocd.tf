@@ -25,7 +25,9 @@ output "helm_ver_argocd" { value = helm_release.argocd.metadata[0].app_version }
 
 # kubectl -n monitoring get secret kube-prometheus-stack-grafana -oyaml | awk '/password/ {print $NF}' | base64 -d
 # kubectl -n  argocd get secret/argocd-initial-admin-secret -oyaml | grep password | awk '{print $NF}' | base64 -d ; echo
+# kubectl port-forward svc/argocd-server -n argocd 81:443
 # kubectl get ing -A | sort -rk 3 |c
+
 # ======================================================================
 /*
 resource "helm_release" "argorollouts" {

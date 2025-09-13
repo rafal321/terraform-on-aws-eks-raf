@@ -80,16 +80,16 @@ module "eks" {
     kube-proxy             = {}
     vpc-cni                = {}
   }
-  vpc_id                   = "vpc-00d014a4e0f6988f8"
-  subnet_ids               = ["subnet-02fb6659a477dd3f9", "subnet-07fcd02390fc69bab", "subnet-07c9f171152e38d2e"] # private subnets
-  control_plane_subnet_ids = ["subnet-02fb6659a477dd3f9", "subnet-07fcd02390fc69bab", "subnet-07c9f171152e38d2e"] # private subnets
+  vpc_id                   = "vpc-074ce303260819992"
+  subnet_ids               = ["subnet-0c356595cb97b2e5a","subnet-084a53ca561cc55a0"] # private subnets
+  control_plane_subnet_ids = ["subnet-0c356595cb97b2e5a","subnet-084a53ca561cc55a0"] # private subnets
   eks_managed_node_groups = {
     karpenter = {
       # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
       ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = ["t3.large", "t2.large", "r5.large", "m5.large", "c5.large"]
       min_size       = 2
-      max_size       = 4
+      max_size       = 8
       desired_size   = 2
       capacity_type  = "SPOT"
       taints = {

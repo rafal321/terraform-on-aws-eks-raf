@@ -1,0 +1,46 @@
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: default
+  name: pod-schedule-001
+# annotations: # Use annotation to Pause
+#   experiment.chaos-mesh.org/pause: 'true'
+spec:
+  schedule: '*/10 * * * * *'
+  startingDeadlineSeconds: null
+  concurrencyPolicy: Forbid
+  historyLimit: 3
+  type: PodChaos
+  podChaos:
+    selector:
+      namespaces:
+        - default
+      labelSelectors:
+        app: nginx
+    mode: one
+    action: pod-kill
+
+---
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: default
+  name: pod-schedule-002
+# annotations:
+#   experiment.chaos-mesh.org/pause: 'true'
+spec:
+  schedule: '*/20 * * * * *'
+  startingDeadlineSeconds: null
+  concurrencyPolicy: Allow
+  historyLimit: 3
+  type: PodChaos
+  podChaos:
+    selector:
+      namespaces:
+        - default
+      labelSelectors:
+        app: nginx
+    mode: fixed-percent
+    value: '25'
+    action: pod-kill
+---

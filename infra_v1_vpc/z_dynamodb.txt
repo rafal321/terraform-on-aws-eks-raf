@@ -6,7 +6,7 @@ cat <<EOF > z_dynamodb_schema.json
       "AttributeType": "S"
     }
   ],
-  "TableName": "infrastructure_v2_db",
+  "TableName": "infrastructure_v0.1",
   "KeySchema": [
     {
       "AttributeName": "LockID",
@@ -29,3 +29,7 @@ aws dynamodb list-tables --profile XXX
 -------------------------------------------------
 aws dynamodb describe-table --table-name vpc-terraform-state --profile XXX
 -------------------------------------------------
+aws s3api create-bucket \
+    --bucket rerraform-state-s3-bucket-250717 \
+    --region us-east-1 \
+    --profile dev

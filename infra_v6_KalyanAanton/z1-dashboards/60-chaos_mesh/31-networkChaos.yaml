@@ -1,0 +1,125 @@
+---
+kind: NetworkChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: default
+  name: network-delay0940
+spec:
+  selector:
+    namespaces:
+      - default
+    pods:
+      default:
+        - curl-pod
+  mode: all
+  action: delay
+  duration: 120s
+  delay:
+    latency: 100ms
+    correlation: '0'
+    jitter: 0ms
+  direction: to
+# works
+---
+kind: NetworkChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: default
+  name: network-chaos1426
+  annotations:
+    experiment.chaos-mesh.org/pause: 'true'
+spec:
+  selector:
+    namespaces:
+      - default
+    labelSelectors:
+      app: net-tools1
+  mode: all
+  action: delay
+  delay:
+    latency: 100ms
+    correlation: '0'
+    jitter: 0ms
+  direction: to
+# works
+---
+kind: NetworkChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: default
+  name: network-chaos1432
+  annotations:
+    experiment.chaos-mesh.org/pause: 'true'
+spec:
+  selector:
+    namespaces:
+      - default # everything in the namespace
+  mode: all
+  action: delay
+  delay:
+    latency: 100ms
+    correlation: '0'
+    jitter: 0ms
+  direction: to
+# works
+
+# kubectl get po curl-pod --show-labels |c
+
+---
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: default
+  name: dns-fault1525
+  annotations:
+    experiment.chaos-mesh.org/pause: 'true'
+spec:
+  schedule: '*/5 * * * *'
+  startingDeadlineSeconds: 2
+  concurrencyPolicy: Forbid
+  historyLimit: 1
+  type: DNSChaos
+  dnsChaos:
+    action: error
+    selector:
+      namespaces:
+        - default
+    mode: all
+    duration: 2m
+    patterns:
+      - google.com
+      - github.com
+---
+# this works for nginx-svc delay and google.com is ok
+kind: Schedule
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: default
+  name: network-delay1831
+  annotations:
+    experiment.chaos-mesh.org/pause: 'false'
+spec:
+  schedule: '*/1 * * * *'
+  startingDeadlineSeconds: 3
+  concurrencyPolicy: Forbid
+  historyLimit: 2
+  type: NetworkChaos
+  networkChaos:
+    selector:
+      namespaces:
+        - default
+      labelSelectors:
+        app: nginx
+    mode: all
+    action: delay
+    duration: 30s
+    delay:
+      latency: 200ms
+    direction: to
+    target:
+      selector:
+        namespaces:
+          - default
+        labelSelectors:
+          app: curl-pod-label
+      mode: all

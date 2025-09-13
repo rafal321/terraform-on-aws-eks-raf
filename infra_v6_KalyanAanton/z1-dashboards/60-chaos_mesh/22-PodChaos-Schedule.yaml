@@ -1,0 +1,36 @@
+# ---
+# kind: PodChaos
+# apiVersion: chaos-mesh.org/v1alpha1
+# metadata:
+#   namespace: default
+#   name: podfailure1556
+# spec:
+#   selector:
+#     namespaces:
+#       - default
+#     labelSelectors:
+#       app: nginx
+#   mode: all
+#   action: pod-failure
+#   duration: 60s
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: Schedule
+metadata:
+  namespace: default # chaos-mesh
+  name: pod-kill-example
+spec:
+  schedule: "@every 10s"
+  type: PodChaos
+  historyLimit: 3
+  concurrencyPolicy: Forbid
+  podChaos:
+    action: pod-kill
+    mode: random-max-percent # one
+    value: '75'
+    selector: 
+      namespaces:
+        - default
+      labelSelectors:
+        app: nginx
+  

@@ -1,0 +1,66 @@
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  name: network-latency-example2034
+  namespace: default
+spec:
+  action: delay
+  mode: all
+  selector:
+    labelSelectors:
+      app: curl-pod-label
+  delay:
+    latency: "250ms"
+
+# this WORKS ping from curl-pod to nginx-svc delays
+#            ping from net-tools1 to nginx-svc does not delays
+# This can be paused and resumed - from  0.002 to 0.755
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: NetworkChaos
+metadata:
+  namespace: default
+  name: network-latency-example2047
+spec:
+  action: delay
+  mode: all
+  selector:
+    namespaces:
+      - default
+  delay:
+    latency: "250ms"
+
+# this WORKS ping from curl-pod,net-tools1  to nginx-svc delays x2
+# so the ping doubles because test pods and app we ping are in the same namespace
+# This can be paused and resumed - from  0.002 to 1.252
+---
+kind: NetworkChaos
+apiVersion: chaos-mesh.org/v1alpha1
+metadata:
+  namespace: default
+  name: network-latency-example2106
+spec:
+  selector:
+    namespaces:
+      - default
+    pods:
+      default:
+        - curl-pod
+        - net-tools1
+        - nginx-deploy-69d4c97687-sk9kz
+        - nginx-deploy-69d4c97687-t8ttl
+        - nginx-deploy-69d4c97687-v4n4f
+  mode: all
+  action: delay
+  delay:
+    latency: 255ms
+    correlation: '0'
+    jitter: 0ms
+  direction: to
+# this WORKS ping from curl-pod,net-tools1  to nginx-svc delays x2 sometimes x1
+# but there are some pods nginx-deploy... not listed so ping is x1 but with listed ons ping is x2
+# This can be paused and resumed - from  0.002 to 1.252 or 0.768 for not included pods
+
+# if pods are replaced from blue to green network chaos will not work even though the labels are the same
+
+# SITE="nginx-svc" # "google.com"

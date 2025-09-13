@@ -1,0 +1,14 @@
+# https://overcast.blog/kubernetes-chaos-mesh-a-guide-662803fc1119
+---
+apiVersion: chaos-mesh.org/v1alpha1
+kind: PodChaos
+metadata:
+  name: default-pod-chaos2125
+  namespace: default
+spec:
+  action: pod-failure
+  mode: one
+  duration: "60s"
+  selector:
+    labelSelectors:
+      app: nginx

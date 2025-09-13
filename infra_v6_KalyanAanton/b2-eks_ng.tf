@@ -47,14 +47,14 @@ resource "aws_eks_node_group" "eks_ng_private" {
   node_role_arn   = aws_iam_role.nodes.arn
   subnet_ids      = local.subnets_pri
 
-  ami_type       = "AL2_x86_64" #"BOTTLEROCKET_x86_64"
+  ami_type       = "AL2_x86_64" # "AL2_x86_64" "BOTTLEROCKET_x86_64" "AL2023_x86_64_STANDARD"
   capacity_type  = "SPOT"
   disk_size      = 20
   instance_types = ["t3.large", "t3a.large", "t2.large", "r5.large", "r6a.large"] # "t3.large|2cpu|8GB|29po|$0.0912" ; "t3a.large|2cpu|8GB|$0.0816" ; "c6a.large|2cpu|4GB|$0.0821" 
 
   scaling_config {
-    desired_size = 3
-    min_size     = 3
+   desired_size = 2
+    min_size     = 2
     max_size     = 10
   }
   # Explained: Cluster Autoscaler Tutorial (EKS Pod Identities): AWS EKS Kubernetes Tutorial - Part 5

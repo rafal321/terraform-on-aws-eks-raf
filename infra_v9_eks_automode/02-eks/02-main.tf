@@ -70,3 +70,22 @@ output "update_kubeconfig" { value = "aws eks update-kubeconfig --name ${module.
 # kubectl api-resources | grep kar
 
 # helm install metrics-server metrics-server/metrics-server --namespace kube-system --set "args={--kubelet-insecure-tls}"
+
+###----
+# values.yaml
+# args:
+#   - --kubelet-insecure-tls
+# nodeSelector:
+#   karpenter.sh/nodepool: system
+# tolerations:
+#   - key: CriticalAddonsOnly
+#     operator: Exists
+#   - key: your-key
+#     operator: Equal
+#     value: your-value
+#     effect: NoSchedule
+
+# helm install metrics-server metrics-server/metrics-server \
+#   --namespace kube-system \
+#   -f values.yaml
+###----
